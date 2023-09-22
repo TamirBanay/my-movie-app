@@ -1,4 +1,4 @@
-Movie Explorer App
+**Movie Explorer App**
 
 Description:
 My Movie Explorer App is a small React project that I developed for self-practice. It's a web application that allows me to explore a curated list of movies, view detailed information about each movie, and search for specific films. The project primarily focuses on improving my skills in React, including state management, routing, and making API requests from(TMDb).
@@ -27,7 +27,7 @@ Prerequisites:
 Installation:
 
 1. Clone the repository:
-   git clone https://github.com/banay9329/movie-explorer-app.git
+   git clone https://gitlab.com/banay9329/my-movie-app
 
 2. Change to the project directory:
    cd movie-explorer-app
