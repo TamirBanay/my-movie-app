@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     fetchMoviesData();
   }, [currentPage]);
-  console.log(movies);
+  // console.log(movies);
   return (
     <div>
       <Navbar />
