@@ -36,6 +36,7 @@ export default function GradientCover() {
       >
         {movies.map((movie) => (
           <Link
+            style={{ color: "#000" }}
             to={`/movie/${movie.id}`} // Fixed the route path to include movie ID
             key={movie.id}
           >
