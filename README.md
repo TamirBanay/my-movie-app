@@ -30,7 +30,7 @@ Installation:
    git clone https://gitlab.com/banay9329/my-movie-app
 
 2. Change to the project directory:
-   cd movie-explorer-app
+   cd my-movie-app
 
 3. Install dependencies:
    npm install
