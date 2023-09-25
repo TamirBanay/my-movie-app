@@ -16,3 +16,7 @@ export const _movieId = atom({
   key: "_movieId",
   default: null,
 });
+export const _userIsLoggedIn = atom({
+  key: "_userIsLoggedIn",
+  default: null,
+});
