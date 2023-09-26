@@ -130,7 +130,10 @@ function ResponsiveAppBar() {
                 </Button>
               ))
             ) : (
-              <Button sx={{ my: 2, color: "white", display: "block" }}>
+              <Button
+                href="/login"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
                 login
               </Button>
             )}

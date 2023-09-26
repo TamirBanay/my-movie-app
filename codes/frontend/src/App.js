@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { _moviesList, _currentPage, _movieId } from "./services/atom";
 import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
+import Login from "./pages/Loginpage";
 function App() {
   const [movies, setMovies] = useRecoilState(_moviesList);
   const [currentPage, setCurrentPage] = useRecoilState(_currentPage);
@@ -42,6 +43,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </div>
