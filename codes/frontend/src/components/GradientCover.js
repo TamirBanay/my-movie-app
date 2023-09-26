@@ -53,7 +53,6 @@ export default function GradientCover(props) {
   // }, []);
 
   const UserID = localStorage.getItem("userID");
-  console.log(UserID);
   useEffect(() => {
     fetch(`http://localhost:8000/api/user/${UserID}/`)
       .then((response) => response.json())

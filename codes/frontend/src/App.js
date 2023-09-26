@@ -42,7 +42,6 @@ function App() {
         );
     }
   };
-  console.log(currentUserId == null);
   const fetchMoviesData = () => {
     const options = {
       method: "GET",

@@ -64,6 +64,7 @@ function ResponsiveAppBar() {
       localStorage.removeItem("userID");
       navigate("/login");
       setUserIsLoggedIn(false);
+      setAnchorElUser(false);
       // Clear the token from local storage
     } else {
       // Logout failed
