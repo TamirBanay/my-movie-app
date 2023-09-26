@@ -2,7 +2,7 @@ import GradientCover from "../components/GradientCover";
 function Home() {
   return (
     <div>
-      <GradientCover />
+      <GradientCover  />
     </div>
   );
 }

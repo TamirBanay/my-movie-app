@@ -12,8 +12,15 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useNavigate } from "react-router-dom";
+
 import { useRecoilState } from "recoil";
-import { _movieIsOpen, _movieId, _userIsLoggedIn } from "../services/atom";
+import {
+  _movieIsOpen,
+  _movieId,
+  _userIsLoggedIn,
+  _currentUserId,
+} from "../services/atom";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -22,6 +29,8 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+  const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,6 +46,30 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const token = localStorage.getItem("token"); // Replace with the actual token
+
+  async function handleLogout() {
+    const response = await fetch("http://localhost:8000/api/logout/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      // Logout successful
+      console.log("Logged out successfully");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userID");
+      navigate("/login");
+      setUserIsLoggedIn(false);
+      // Clear the token from local storage
+    } else {
+      // Logout failed
+      console.error("Logout failed:", response.statusText);
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -47,7 +80,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={`/${currentUserId}`}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -161,11 +194,14 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
+                {/* {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
-                ))}
+                ))} */}
+                <MenuItem onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           ) : (

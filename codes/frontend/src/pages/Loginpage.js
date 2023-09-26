@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
-import { _movieIsOpen, _movieId, _userIsLoggedIn } from "../services/atom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { _userIsLoggedIn, _currentUserId } from "../services/atom";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -9,6 +9,8 @@ function Login() {
   const [error, setError] = useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const navigate = useNavigate();
+  let { userId } = useParams();
+  const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
 
   const handleLogin = async () => {
     const url = "http://localhost:8000/api/login/";
@@ -25,16 +27,19 @@ function Login() {
         body: JSON.stringify(credentials),
       });
       if (!response.ok) {
-        // Handle non-2xx response (e.g., display error message)
         const errorData = await response.json();
         setError(errorData.non_field_errors || "Login failed");
       } else {
         const data = await response.json();
-        localStorage.setItem("token", data.access); // Assuming the access token is what you want to store
+        localStorage.setItem("token", data.access);
+        localStorage.setItem("userID", data.user.id);
         setUserIsLoggedIn(true);
-        console.log(data.user.id); // Logs just the username
-        // But data.user contains all the user info sent from the server
-        navigate("/");
+        setCurrentUserId(data.user.id);
+        if (data.user.id) {
+          navigate(`/${data.user.id}`);
+        } else {
+          console.error("User ID is null or undefined:", data);
+        }
       }
     } catch (error) {
       console.error("Network error:", error);
@@ -43,6 +48,7 @@ function Login() {
 
   return (
     <div>
+      <p />
       <input
         type="text"
         placeholder="Username"
