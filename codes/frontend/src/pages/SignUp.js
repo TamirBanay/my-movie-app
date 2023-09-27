@@ -12,8 +12,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Copyright(props) {
+
   return (
     <Typography
       variant="body2"
@@ -27,21 +29,23 @@ function Copyright(props) {
     </Typography>
   );
 }
-
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+    const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = {
       first_name: event.currentTarget.firstName.value,
       last_name: event.currentTarget.lastName.value,
+      username: event.currentTarget.username.value,
       email: event.currentTarget.email.value,
       password: event.currentTarget.password.value,
     };
 
     try {
-      const response = await fetch("http://localhost:8000/signup", {
+      const response = await fetch("http://localhost:8000/api/signup/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,6 +60,8 @@ export default function SignUp() {
       } else {
         const userData = await response.json();
         console.log("Signup successful", userData);
+        navigate("/login");
+
         // Handle success
       }
     } catch (error) {
@@ -107,6 +113,16 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="username"
+                  label="User Name"
+                  name="username"
+                  autoComplete="user-name"
                 />
               </Grid>
               <Grid item xs={12}>

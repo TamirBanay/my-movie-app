@@ -15,6 +15,8 @@ import {
 import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
 import Login from "./pages/Loginpage";
+import SignUp from "./pages/SignUp";
+
 function App() {
   const [movies, setMovies] = useRecoilState(_moviesList);
   const [currentPage, setCurrentPage] = useRecoilState(_currentPage);
@@ -77,6 +79,7 @@ function App() {
           <Route path="/:currentUserId" element={<Home />} />
           <Route path="/movie/:id" element={<Movie />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </BrowserRouter>
     </div>

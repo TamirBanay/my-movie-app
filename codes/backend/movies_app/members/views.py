@@ -14,6 +14,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import logout,login
 from django.contrib import messages
 from .serializers import UserSerializer
+from .serializers import SignupSerializer
+
 class LoginView(APIView):
     def post(self, request):
         user = authenticate(username=request.data['username'], password=request.data['password'])
@@ -58,3 +60,24 @@ class LogoutView(APIView):
     def post(self, request, *args, **kwargs):
         user = getattr(request, "user", None)
         return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
+    
+    
+    
+    
+class SignupView(APIView):
+    def post(self, request):
+        serializer = SignupSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'user': {
+                    'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'email': user.email,
+                },
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
