@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'members',
     'movies_app',
     'corsheaders',
+    'rest_framework',
+
 
 
 ]

@@ -4,6 +4,9 @@ import CardCover from "@mui/joy/CardCover";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import Favorite from "@mui/icons-material/Favorite";
+import IconButton from "@mui/joy/IconButton";
+
 import { useEffect, useState } from "react";
 import {
   _moviesList,
@@ -28,30 +31,53 @@ export default function GradientCover(props) {
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+  const [isLiked, setIsLiked] = useState({}); // Changed to an object
+  const handleIsLiked = (movieId, movieTitle) => {
+    console.log(movieId);
+    const newIsLiked = !isLiked[movieId];
+    setIsLiked((prevState) => ({
+      ...prevState,
+      [movieId]: newIsLiked,
+    }));
 
-  // const fetchUserDataBasedOnToken = (token) => {
-  //   fetch(`http://localhost:8000/api/user/`, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setUser(data);
-  //       setCurrentUserId(data.id);
-  //     })
-  //     .catch((error) =>
-  //       console.error("There was a problem with the fetch:", error)
-  //     );
-  // };
+    const csrfToken = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     fetchUserDataBasedOnToken(token);
-  //   }
-  // }, []);
-
+    if (newIsLiked) {
+      // If the movie is liked, make a POST request to add the movie
+      fetch("http://localhost:8000/add_movie_to_favorite/", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+          tmdb_id: movieId,
+          name: movieTitle,
+        }),
+      })
+        .then((response) => response.json())
+        .then((response) => console.log(JSON.stringify(response)));
+    } else {
+      // If the movie is unliked, make a DELETE request to remove the movie
+      fetch(`http://localhost:8000/remove_movie_from_favorite/${movieId}/`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Movie removed successfully");
+          } else {
+            console.error("Failed to remove movie");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+  };
   const UserID = localStorage.getItem("userID");
   useEffect(() => {
     fetch(`http://localhost:8000/api/user/${UserID}/`)
@@ -82,32 +108,46 @@ export default function GradientCover(props) {
         sx={{ flexGrow: 1, justifyContent: "center" }}
       >
         {movies.map((movie) => (
-          <Link
-            style={{ color: "#000" }}
-            to={`/movie/${movie.id}`} // Fixed the route path to include movie ID
+          <Card
+            sx={{ minHeight: "280px", width: 180, m: 1 }}
             key={movie.id}
+            onClick={() => handleOpenMovie(movie.id)}
           >
-            <Card
-              sx={{ minHeight: "280px", width: 120, m: 1 }}
-              key={movie.id}
-              onClick={() => handleOpenMovie(movie.id)}
-            >
-              <CardCover>
-                <img src={`${imgPath + movie.poster_path}`} />
-              </CardCover>
-              <CardCover
-                sx={{
-                  background:
-                    "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
-                }}
-              />
-              <CardContent sx={{ justifyContent: "flex-end" }}>
+            <CardCover>
+              <img src={`${imgPath + movie.poster_path}`} />
+            </CardCover>
+
+            <CardCover
+              sx={{
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
+              }}
+            />
+
+            <CardContent sx={{ justifyContent: "flex-end" }}>
+              <Link
+                style={{ color: "#000", textDecoration: "none" }} // added textDecoration to remove link underline
+                to={`/movie/${movie.id}`} // Fixed the route path to include movie ID
+                key={movie.id}
+              >
                 <Typography level="title-lg" textColor="#fff">
                   {movie.title}
                 </Typography>
-              </CardContent>
-            </Card>
-          </Link>
+              </Link>
+
+              <Typography
+                startDecorator={
+                  <Favorite
+                    onClick={() => handleIsLiked(movie.id, movie.title)}
+                    color={isLiked[movie.id] ? "warning" : ""}
+                  />
+                }
+                textColor="neutral.300"
+              >
+                Add to favorites
+              </Typography>
+            </CardContent>
+          </Card>
         ))}
       </Grid>
       <p />
