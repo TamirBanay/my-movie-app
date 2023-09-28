@@ -18,8 +18,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from .views import add_movie,remove_movie_from_favorite
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('members.urls')),  # This includes the members app URLs under the path 'api/'
+    path('add_movie_to_favorite/', add_movie, name='add_movie'),
+    path('remove_movie_from_favorite/<int:movie_id>/',remove_movie_from_favorite, name='remove_movie'),
+
+
 ]
