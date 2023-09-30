@@ -1,8 +1,8 @@
 # serializers.py
 from rest_framework import serializers
-from .models import MovieILike
+from .models import Favorite  # Change MovieILike to Favorite
 
-class MovieSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MovieILike
-        fields = '__all__'
+        model = Favorite  # Change MovieILike to Favorite
+        fields = ['tmdb_movie_id', 'user']  # Update field names if necessary

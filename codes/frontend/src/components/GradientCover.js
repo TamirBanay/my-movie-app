@@ -30,21 +30,24 @@ export default function GradientCover(props) {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
+
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [isLiked, setIsLiked] = useState({}); // Changed to an object
-  const handleIsLiked = (movieId, movieTitle) => {
-    console.log(movieId);
+  const UserID = localStorage.getItem("userID");
+  const csrfToken = localStorage.getItem("token");
+  const handleIsLiked = (movieId, movieTitle, UserID) => {
     const newIsLiked = !isLiked[movieId];
     setIsLiked((prevState) => ({
       ...prevState,
       [movieId]: newIsLiked,
     }));
 
-    const csrfToken = localStorage.getItem("token");
-
     if (newIsLiked) {
-      // If the movie is liked, make a POST request to add the movie
-      fetch("http://localhost:8000/add_movie_to_favorite/", {
+      const csrfToken = localStorage.getItem("token");
+      const UserID = localStorage.getItem("userID");
+      console.log(UserID);
+
+      fetch("http://localhost:8000/add_favorite/", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -52,33 +55,33 @@ export default function GradientCover(props) {
           "X-CSRFToken": csrfToken,
         },
         body: JSON.stringify({
-          tmdb_id: movieId,
-          name: movieTitle,
+          tmdb_movie_id: movieId,
+          user: UserID,
         }),
       })
         .then((response) => response.json())
         .then((response) => console.log(JSON.stringify(response)));
     } else {
-      // If the movie is unliked, make a DELETE request to remove the movie
-      fetch(`http://localhost:8000/remove_movie_from_favorite/${movieId}/`, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log("Movie removed successfully");
-          } else {
-            console.error("Failed to remove movie");
-          }
-        })
-        .catch((error) => console.error("Error:", error));
+      console.log("Removing a movie from favorites is not allowed.");
     }
   };
-  const UserID = localStorage.getItem("userID");
+
+  useEffect(() => {
+    fetch(`http://localhost:8000/get_favorites/${UserID}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        const likedMovies = {};
+        data.forEach((favorite) => {
+          likedMovies[favorite.tmdb_movie_id] = true;
+        });
+        setIsLiked(likedMovies);
+        setUserIsLoggedIn(true); // assuming you want to set this true when favorites are fetched
+      })
+      .catch((error) =>
+        console.error("There was a problem with the fetch:", error)
+      );
+  }, [UserID]);
+
   useEffect(() => {
     fetch(`http://localhost:8000/api/user/${UserID}/`)
       .then((response) => response.json())

@@ -1,9 +1,10 @@
-# movie_app/models.py
+
+from django.conf import settings
 from django.db import models
 
-class MovieILike(models.Model):
-    tmdb_id = models.IntegerField(unique=True)  # Unique TMDB ID
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.title
+class Favorite(models.Model):
+    tmdb_movie_id = models.IntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+    class Meta:
+      unique_together = ('tmdb_movie_id', 'user',)
