@@ -18,13 +18,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .views import AddFavoriteView,GetFavoritesView
+from .views import AddFavoriteView,RemoveFavoriteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('members.urls')),  # This includes the members app URLs under the path 'api/'
     path('add_favorite/', AddFavoriteView.as_view(), name='add_favorite'),
-    path('get_favorites/<int:user_id>/', GetFavoritesView.as_view(), name='get_favorites'),
+    path('remove_favorite/<int:tmdb_movie_id>/<int:user_id>/', RemoveFavoriteView.as_view(), name='remove_favorite'),
 
 
 ]
