@@ -16,6 +16,8 @@ import {
   _currentUserId,
   _user,
   _userIsLoggedIn,
+  _favoritMovies,
+  _isLiked,
 } from "../services/atom";
 import { useRecoilState } from "recoil";
 import Grid from "@mui/joy/Grid";
@@ -30,14 +32,14 @@ export default function GradientCover(props) {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
+  const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
 
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
-  const [isLiked, setIsLiked] = useState({}); // Changed to an object
+  const [isLiked, setIsLiked] = useRecoilState(_isLiked); // Changed to an object
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
 
-  const handleIsLiked = (movieId, movieTitle) => {
-    // Removed UserID from arguments
+  const handleIsLiked = (movieId) => {
     const newIsLiked = !isLiked[movieId];
     setIsLiked((prevState) => ({
       ...prevState,
@@ -58,7 +60,13 @@ export default function GradientCover(props) {
         }),
       })
         .then((response) => response.json())
-        .then((response) => console.log(JSON.stringify(response)));
+        .then((response) => {
+          console.log(JSON.stringify(response));
+          setFavoriteMovies((prevState) => [
+            ...prevState,
+            { tmdb_movie_id: movieId }, // Assuming the data structure is like this
+          ]);
+        });
     } else {
       const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
       fetch(url, {
@@ -72,6 +80,9 @@ export default function GradientCover(props) {
         .then((response) => {
           if (response.ok) {
             console.log("Movie removed successfully");
+            setFavoriteMovies((prevState) =>
+              prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
+            );
           } else {
             console.error("Failed to remove movie");
           }
@@ -98,8 +109,22 @@ export default function GradientCover(props) {
     setMovieId(movieID);
   };
 
-  const imgPath = "https://image.tmdb.org/t/p/original/";
+  const fetchFavoriteMovies = (UserID) => {
+    fetch(`http://localhost:8000/favorite_movies/${UserID}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFavoriteMovies(data.movies);
+      })
+      .catch((error) =>
+        console.error("There was a problem with the fetch:", error)
+      );
+  };
 
+  useEffect(() => {
+    fetchFavoriteMovies(UserID);
+  }, []);
+
+  const imgPath = "https://image.tmdb.org/t/p/original/";
   return (
     <div>
       {" "}
@@ -140,12 +165,23 @@ export default function GradientCover(props) {
                 startDecorator={
                   <Favorite
                     onClick={() => handleIsLiked(movie.id, movie.title)}
-                    color={isLiked[movie.id] ? "warning" : ""}
+                    color={
+                      favoriteMovies.some(
+                        (favoriteMovie) =>
+                          favoriteMovie.tmdb_movie_id === movie.id
+                      )
+                        ? "warning"
+                        : ""
+                    }
                   />
                 }
                 textColor="neutral.300"
               >
-                Add to favorites
+                {favoriteMovies.some(
+                  (favoriteMovie) => favoriteMovie.tmdb_movie_id === movie.id
+                )
+                  ? "Remove from list"
+                  : "Add from favorites"}
               </Typography>
             </CardContent>
           </Card>

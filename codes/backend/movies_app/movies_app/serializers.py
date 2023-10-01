@@ -6,3 +6,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite  # Change MovieILike to Favorite
         fields = ['tmdb_movie_id', 'user']  # Update field names if necessary
+        
+        
+class FavoriteMovieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = '__all__'
