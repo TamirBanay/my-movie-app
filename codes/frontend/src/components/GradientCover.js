@@ -38,8 +38,11 @@ export default function GradientCover(props) {
   const [isLiked, setIsLiked] = useRecoilState(_isLiked); // Changed to an object
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
-
   const handleIsLiked = (movieId) => {
+    const isAlreadyFavorite = favoriteMovies.some(
+      (favoriteMovie) => favoriteMovie.tmdb_movie_id === movieId
+    );
+
     const newIsLiked = !isLiked[movieId];
     setIsLiked((prevState) => ({
       ...prevState,
@@ -47,6 +50,10 @@ export default function GradientCover(props) {
     }));
 
     if (newIsLiked) {
+      if (isAlreadyFavorite) {
+        console.log("Movie is already in favorites");
+        return;
+      }
       fetch("http://localhost:8000/add_favorite/", {
         method: "POST",
         headers: {
@@ -68,6 +75,10 @@ export default function GradientCover(props) {
           ]);
         });
     } else {
+      if (!isAlreadyFavorite) {
+        console.log("Movie is not in favorites to remove");
+        return;
+      }
       const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
       fetch(url, {
         method: "DELETE",

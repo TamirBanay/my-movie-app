@@ -15,7 +15,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate, useParams } from "react-router-dom";
 
 function Copyright(props) {
-
   return (
     <Typography
       variant="body2"
@@ -32,7 +31,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -165,7 +164,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link href="/#/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
