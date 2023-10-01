@@ -28,3 +28,12 @@ export const _user = atom({
   key: "_user",
   default: [],
 });
+export const _favoritMovies = atom({
+  key: "_favoritMovies",
+  default: [],
+});
+
+export const _isLiked = atom({
+  key: "_isLiked",
+  default: false,
+});

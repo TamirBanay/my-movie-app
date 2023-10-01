@@ -16,6 +16,8 @@ import {
   _currentUserId,
   _user,
   _userIsLoggedIn,
+  _favoritMovies,
+  _isLiked,
 } from "../services/atom";
 import { useRecoilState } from "recoil";
 import Grid from "@mui/joy/Grid";
@@ -30,21 +32,22 @@ export default function GradientCover(props) {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
+  const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
+
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
-  const [isLiked, setIsLiked] = useState({}); // Changed to an object
-  const handleIsLiked = (movieId, movieTitle) => {
-    console.log(movieId);
+  const [isLiked, setIsLiked] = useRecoilState(_isLiked); // Changed to an object
+  const UserID = localStorage.getItem("userID");
+  const csrfToken = localStorage.getItem("token");
+
+  const handleIsLiked = (movieId) => {
     const newIsLiked = !isLiked[movieId];
     setIsLiked((prevState) => ({
       ...prevState,
       [movieId]: newIsLiked,
     }));
 
-    const csrfToken = localStorage.getItem("token");
-
     if (newIsLiked) {
-      // If the movie is liked, make a POST request to add the movie
-      fetch("http://localhost:8000/add_movie_to_favorite/", {
+      fetch("http://localhost:8000/add_favorite/", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -52,15 +55,21 @@ export default function GradientCover(props) {
           "X-CSRFToken": csrfToken,
         },
         body: JSON.stringify({
-          tmdb_id: movieId,
-          name: movieTitle,
+          tmdb_movie_id: movieId,
+          user: currentUserId, // Use the state variable
         }),
       })
         .then((response) => response.json())
-        .then((response) => console.log(JSON.stringify(response)));
+        .then((response) => {
+          console.log(JSON.stringify(response));
+          setFavoriteMovies((prevState) => [
+            ...prevState,
+            { tmdb_movie_id: movieId }, // Assuming the data structure is like this
+          ]);
+        });
     } else {
-      // If the movie is unliked, make a DELETE request to remove the movie
-      fetch(`http://localhost:8000/remove_movie_from_favorite/${movieId}/`, {
+      const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
+      fetch(url, {
         method: "DELETE",
         headers: {
           Accept: "application/json",
@@ -71,6 +80,9 @@ export default function GradientCover(props) {
         .then((response) => {
           if (response.ok) {
             console.log("Movie removed successfully");
+            setFavoriteMovies((prevState) =>
+              prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
+            );
           } else {
             console.error("Failed to remove movie");
           }
@@ -78,7 +90,7 @@ export default function GradientCover(props) {
         .catch((error) => console.error("Error:", error));
     }
   };
-  const UserID = localStorage.getItem("userID");
+
   useEffect(() => {
     fetch(`http://localhost:8000/api/user/${UserID}/`)
       .then((response) => response.json())
@@ -97,8 +109,22 @@ export default function GradientCover(props) {
     setMovieId(movieID);
   };
 
-  const imgPath = "https://image.tmdb.org/t/p/original/";
+  const fetchFavoriteMovies = (UserID) => {
+    fetch(`http://localhost:8000/favorite_movies/${UserID}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFavoriteMovies(data.movies);
+      })
+      .catch((error) =>
+        console.error("There was a problem with the fetch:", error)
+      );
+  };
 
+  useEffect(() => {
+    fetchFavoriteMovies(UserID);
+  }, []);
+
+  const imgPath = "https://image.tmdb.org/t/p/original/";
   return (
     <div>
       {" "}
@@ -139,12 +165,23 @@ export default function GradientCover(props) {
                 startDecorator={
                   <Favorite
                     onClick={() => handleIsLiked(movie.id, movie.title)}
-                    color={isLiked[movie.id] ? "warning" : ""}
+                    color={
+                      favoriteMovies.some(
+                        (favoriteMovie) =>
+                          favoriteMovie.tmdb_movie_id === movie.id
+                      )
+                        ? "warning"
+                        : ""
+                    }
                   />
                 }
                 textColor="neutral.300"
               >
-                Add to favorites
+                {favoriteMovies.some(
+                  (favoriteMovie) => favoriteMovie.tmdb_movie_id === movie.id
+                )
+                  ? "Remove from list"
+                  : "Add from favorites"}
               </Typography>
             </CardContent>
           </Card>

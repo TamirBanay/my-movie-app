@@ -1,8 +1,8 @@
 # movie_app/forms.py
 from django import forms
-from .models import MovieILike
+from .models import Favorite
 
-class MovieILikeForm(forms.ModelForm):
+class FavoriteForm(forms.ModelForm):
     class Meta:
-        model = MovieILike
-        fields = ['tmdb_id', 'name']
+        model = Favorite
+        fields = ['tmdb_movie_id', 'user']  # Updated field names to match the new model structure
