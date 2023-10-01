@@ -1,6 +1,12 @@
 import "./App.css";
 import Home from "./pages/Home";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useParams,
+  HashRouter,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -16,6 +22,7 @@ import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
 import Login from "./pages/Loginpage";
 import SignUp from "./pages/SignUp";
+import FaviritMovies from "./pages/FaviritMovies";
 
 function App() {
   const [movies, setMovies] = useRecoilState(_moviesList);
@@ -73,15 +80,16 @@ function App() {
 
   return (
     <div>
-      <BrowserRouter>
+      <HashRouter>
         <Navbar />
         <Routes>
           <Route path="/:currentUserId" element={<Home />} />
           <Route path="/movie/:id" element={<Movie />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/:currentUserId/favorits" element={<FaviritMovies />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

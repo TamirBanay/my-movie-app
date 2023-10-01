@@ -8,7 +8,7 @@ import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
 import { Link, useParams } from "react-router-dom";
 
-import { _movieIsOpen, _movieId } from "../services/atom";
+import { _movieIsOpen, _movieId, _currentUserId } from "../services/atom";
 
 export default function BasicCard() {
   const { id } = useParams();
@@ -17,6 +17,7 @@ export default function BasicCard() {
   const [movieId, setMovieId] = useRecoilState(_movieId);
   const [movie, setMovie] = useState({});
   const imgPath = "https://image.tmdb.org/t/p/original/";
+  const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
 
   const handleOpenMovie = () => {
     setMovieIsOpen(!movieIsOpen);
@@ -73,7 +74,7 @@ export default function BasicCard() {
                 </Typography>
               </Typography>
             </div>
-            <Link to="/" style={{ marginTop: "auto" }}>
+            <Link to={`/${currentUserId}`} style={{ marginTop: "auto" }}>
               <Button
                 onClick={handleOpenMovie}
                 variant="solid"

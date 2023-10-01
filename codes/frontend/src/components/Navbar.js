@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useRecoilState } from "recoil";
 import {
@@ -81,7 +82,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href={`/${currentUserId}`}
+            href={`/#/${currentUserId}`}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -124,13 +125,18 @@ function ResponsiveAppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {userIsLoggedIn
-                ? pages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  ))
-                : ""}
+              {userIsLoggedIn ? (
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Link
+                    to={`/${currentUserId}/favorits`}
+                    style={{ color: "#000", textDecoration: "none" }}
+                  >
+                    Favorite
+                  </Link>
+                </MenuItem>
+              ) : (
+                ""
+              )}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -138,7 +144,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            href={`/#/${currentUserId}`}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -154,18 +160,16 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {userIsLoggedIn ? (
-              pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))
+              <Button
+                href={`/#/${currentUserId}/favorits`}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                MY Favorites
+              </Button>
             ) : (
               <Button
-                href="/login"
+                href="/#/login"
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 login
@@ -195,11 +199,6 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {/* {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))} */}
                 <MenuItem onClick={handleLogout}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
