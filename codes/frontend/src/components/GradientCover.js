@@ -6,6 +6,7 @@ import Typography from "@mui/joy/Typography";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Favorite from "@mui/icons-material/Favorite";
 import IconButton from "@mui/joy/IconButton";
+import { CardMedia } from "@mui/material";
 
 import { useEffect, useState } from "react";
 import {
@@ -136,15 +137,27 @@ export default function GradientCover(props) {
   }, []);
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
+
+  const [filterLetter, setFilterLetter] = useState("");
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(filterLetter.toLowerCase())
+  );
+
   return (
     <div>
-      {" "}
+      <input
+        type="text"
+        placeholder="Enter letter"
+        value={filterLetter}
+        onChange={(e) => setFilterLetter(e.target.value)}
+      />{" "}
       <Grid
         container
         spacing={0}
         sx={{ flexGrow: 1, justifyContent: "center" }}
       >
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <Card
             sx={{ minHeight: "280px", width: 180, m: 1 }}
             key={movie.id}
@@ -153,25 +166,22 @@ export default function GradientCover(props) {
             <CardCover>
               <img src={`${imgPath + movie.poster_path}`} />
             </CardCover>
-
             <CardCover
               sx={{
                 background:
                   "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
               }}
             />
-
             <CardContent sx={{ justifyContent: "flex-end" }}>
               <Link
-                style={{ color: "#000", textDecoration: "none" }} // added textDecoration to remove link underline
-                to={`/movie/${movie.id}`} // Fixed the route path to include movie ID
+                style={{ color: "#000", textDecoration: "none" }}
+                to={`/movie/${movie.id}`}
                 key={movie.id}
               >
                 <Typography level="title-lg" textColor="#fff">
                   {movie.title}
                 </Typography>
               </Link>
-
               <Typography
                 startDecorator={
                   <Favorite
