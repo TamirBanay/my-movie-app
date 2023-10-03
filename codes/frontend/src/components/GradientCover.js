@@ -7,7 +7,7 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Favorite from "@mui/icons-material/Favorite";
 import IconButton from "@mui/joy/IconButton";
 import { CardMedia } from "@mui/material";
-
+import Search from "./Search";
 import { useEffect, useState } from "react";
 import {
   _moviesList,
@@ -34,11 +34,46 @@ export default function GradientCover(props) {
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
-
+  const [count, setCount] = useState(0);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [isLiked, setIsLiked] = useRecoilState(_isLiked); // Changed to an object
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
+  const [filterLetter, setFilterLetter] = useState("");
+  const [inputStyle, setInputStyle] = useState({
+    borderRadius: "15px",
+    width: "80%",
+    height: "40px",
+    marginLeft: "10%",
+    padding: "10px",
+    border: "2px solid #4a90e2",
+    outline: "none",
+    fontSize: "16px",
+    color: "#333",
+  });
+  useEffect(() => {
+    const updateStyle = () => {
+      if (window.innerWidth >= 768) {
+        setInputStyle((prevStyle) => ({
+          ...prevStyle,
+          width: "50%",
+          marginLeft: "25%",
+        }));
+      } else {
+        setInputStyle((prevStyle) => ({
+          ...prevStyle,
+          width: "80%",
+          marginLeft: "10%",
+        }));
+      }
+    };
+
+    window.addEventListener("resize", updateStyle);
+    updateStyle();
+
+    return () => window.removeEventListener("resize", updateStyle);
+  }, []);
+
   const handleIsLiked = (movieId) => {
     const isAlreadyFavorite = favoriteMovies.some(
       (favoriteMovie) => favoriteMovie.tmdb_movie_id === movieId
@@ -138,20 +173,22 @@ export default function GradientCover(props) {
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
 
-  const [filterLetter, setFilterLetter] = useState("");
-
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(filterLetter.toLowerCase())
   );
 
   return (
     <div>
+      <p />
       <input
+        style={inputStyle}
         type="text"
-        placeholder="Enter letter"
+        placeholder=" Search Movie"
         value={filterLetter}
         onChange={(e) => setFilterLetter(e.target.value)}
-      />{" "}
+      />
+      <p />
+
       <Grid
         container
         spacing={0}
