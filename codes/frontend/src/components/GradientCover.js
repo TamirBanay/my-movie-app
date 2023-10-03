@@ -6,7 +6,8 @@ import Typography from "@mui/joy/Typography";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Favorite from "@mui/icons-material/Favorite";
 import IconButton from "@mui/joy/IconButton";
-
+import { CardMedia } from "@mui/material";
+import Search from "./Search";
 import { useEffect, useState } from "react";
 import {
   _moviesList,
@@ -33,11 +34,46 @@ export default function GradientCover(props) {
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
-
+  const [count, setCount] = useState(0);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [isLiked, setIsLiked] = useRecoilState(_isLiked); // Changed to an object
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
+  const [filterLetter, setFilterLetter] = useState("");
+  const [inputStyle, setInputStyle] = useState({
+    borderRadius: "15px",
+    width: "80%",
+    height: "40px",
+    marginLeft: "10%",
+    padding: "10px",
+    border: "2px solid #4a90e2",
+    outline: "none",
+    fontSize: "16px",
+    color: "#333",
+  });
+  useEffect(() => {
+    const updateStyle = () => {
+      if (window.innerWidth >= 768) {
+        setInputStyle((prevStyle) => ({
+          ...prevStyle,
+          width: "50%",
+          marginLeft: "25%",
+        }));
+      } else {
+        setInputStyle((prevStyle) => ({
+          ...prevStyle,
+          width: "80%",
+          marginLeft: "10%",
+        }));
+      }
+    };
+
+    window.addEventListener("resize", updateStyle);
+    updateStyle();
+
+    return () => window.removeEventListener("resize", updateStyle);
+  }, []);
+
   const handleIsLiked = (movieId) => {
     const isAlreadyFavorite = favoriteMovies.some(
       (favoriteMovie) => favoriteMovie.tmdb_movie_id === movieId
@@ -136,15 +172,29 @@ export default function GradientCover(props) {
   }, []);
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(filterLetter.toLowerCase())
+  );
+
   return (
     <div>
-      {" "}
+      <p />
+      <input
+        style={inputStyle}
+        type="text"
+        placeholder=" Search Movie"
+        value={filterLetter}
+        onChange={(e) => setFilterLetter(e.target.value)}
+      />
+      <p />
+
       <Grid
         container
         spacing={0}
         sx={{ flexGrow: 1, justifyContent: "center" }}
       >
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <Card
             sx={{ minHeight: "280px", width: 180, m: 1 }}
             key={movie.id}
@@ -153,25 +203,22 @@ export default function GradientCover(props) {
             <CardCover>
               <img src={`${imgPath + movie.poster_path}`} />
             </CardCover>
-
             <CardCover
               sx={{
                 background:
                   "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
               }}
             />
-
             <CardContent sx={{ justifyContent: "flex-end" }}>
               <Link
-                style={{ color: "#000", textDecoration: "none" }} // added textDecoration to remove link underline
-                to={`/movie/${movie.id}`} // Fixed the route path to include movie ID
+                style={{ color: "#000", textDecoration: "none" }}
+                to={`/movie/${movie.id}`}
                 key={movie.id}
               >
                 <Typography level="title-lg" textColor="#fff">
                   {movie.title}
                 </Typography>
               </Link>
-
               <Typography
                 startDecorator={
                   <Favorite
