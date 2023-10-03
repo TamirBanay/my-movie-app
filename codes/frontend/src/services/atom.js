@@ -32,6 +32,10 @@ export const _favoritMovies = atom({
   key: "_favoritMovies",
   default: [],
 });
+export const _favoritMoviesDetails = atom({
+  key: "_favoritMoviesDetails",
+  default: [],
+});
 
 export const _isLiked = atom({
   key: "_isLiked",

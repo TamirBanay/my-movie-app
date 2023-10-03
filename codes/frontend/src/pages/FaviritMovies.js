@@ -7,13 +7,30 @@ import IconButton from "@mui/joy/IconButton";
 import Grid from "@mui/joy/Grid";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { _userIsLoggedIn, _favoritMovies } from "../services/atom";
+import {
+  _moviesList,
+  _currentPage,
+  _movieIsOpen,
+  _movieId,
+  _currentUserId,
+  _user,
+  _userIsLoggedIn,
+  _favoritMovies,
+  _isLiked,
+  _favoritMoviesDetails,
+} from "../services/atom";
+import Favorite from "@mui/icons-material/Favorite";
 
 function FaviritMovies() {
+  const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
-  const [favoriteMovies] = useRecoilState(_favoritMovies);
-  const [favoritMovies, setFavoritMovie] = useState([]);
+  const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
+
+  const [favoritMovies, setFavoritMovie] = useRecoilState(
+    _favoritMoviesDetails
+  );
   const UserID = localStorage.getItem("userID");
+  const csrfToken = localStorage.getItem("token");
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
 
@@ -39,7 +56,31 @@ function FaviritMovies() {
 
   useEffect(() => {
     fetchMovieData();
-  }, []);
+  }, [favoriteMovies]);
+
+  const removeFromFavorit = (movieId) => {
+    console.log(movieId);
+    const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Movie removed successfully");
+          setFavoriteMovies((prevState) =>
+            prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
+          );
+        } else {
+          console.error("Failed to remove movie");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   return (
     <div>
@@ -62,6 +103,12 @@ function FaviritMovies() {
                     alt={movie.title}
                   />
                 </CardCover>
+                <CardCover
+                  sx={{
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
+                  }}
+                />
                 <CardContent sx={{ justifyContent: "flex-end" }}>
                   <Link
                     style={{ color: "#000", textDecoration: "none" }}
@@ -72,6 +119,18 @@ function FaviritMovies() {
                       {movie.title}
                     </Typography>
                   </Link>
+                  <Typography
+                    startDecorator={
+                      <Favorite
+                        onClick={() => removeFromFavorit(movie.id)}
+                        color="warning"
+                        // onClick={() => handleIsLiked(movie.id, movie.title)}
+                      />
+                    }
+                    textColor="neutral.300"
+                  >
+                    Remove from list
+                  </Typography>
                 </CardContent>
               </Card>
             ))}
