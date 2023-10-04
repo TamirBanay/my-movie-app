@@ -86,7 +86,7 @@ function App() {
   };
   return (
     <ThemeContext.Provider value={{ isDark, toggleIsDark }}>
-      <div className="App" id={isDark}>
+      <div className="App" id={isDark} style={{ minHeight: "100vh" }}>
         <HashRouter>
           <Navbar />
           <Routes>
