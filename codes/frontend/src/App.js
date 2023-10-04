@@ -1,5 +1,6 @@
 import "./App.css";
 import Home from "./pages/Home";
+import { createContext } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -17,12 +18,14 @@ import {
   _currentUserId,
   _userIsLoggedIn,
   _user,
+  _isDark,
 } from "./services/atom";
 import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
 import Login from "./pages/Loginpage";
 import SignUp from "./pages/SignUp";
 import FaviritMovies from "./pages/FaviritMovies";
+export const ThemeContext = createContext(null);
 
 function App() {
   const [movies, setMovies] = useRecoilState(_moviesList);
@@ -32,6 +35,7 @@ function App() {
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   let { userId } = useParams();
   const [user, setUser] = useRecoilState(_user);
+  const [isDark, setIsDark] = useRecoilState(_isDark);
 
   const fetchUserData = () => {
     if (currentUserId) {
@@ -77,20 +81,27 @@ function App() {
   useEffect(() => {
     fetchUserData();
   }, [userId]);
-
+  const toggleIsDark = () => {
+    setIsDark((curr) => (curr === "light" ? "dark" : "light"));
+  };
   return (
-    <div>
-      <HashRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/:currentUserId" element={<Home />} />
-          <Route path="/movie/:id" element={<Movie />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/:currentUserId/favorits" element={<FaviritMovies />} />
-        </Routes>
-      </HashRouter>
-    </div>
+    <ThemeContext.Provider value={{ isDark, toggleIsDark }}>
+      <div className="App" id={isDark}>
+        <HashRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/:currentUserId" element={<Home />} />
+            <Route path="/movie/:id" element={<Movie />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/:currentUserId/favorits"
+              element={<FaviritMovies />}
+            />
+          </Routes>
+        </HashRouter>
+      </div>
+    </ThemeContext.Provider>
   );
 }
 

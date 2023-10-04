@@ -41,3 +41,7 @@ export const _isLiked = atom({
   key: "_isLiked",
   default: false,
 });
+export const _isDark = atom({
+  key: "_isDark",
+  default: "dark",
+});

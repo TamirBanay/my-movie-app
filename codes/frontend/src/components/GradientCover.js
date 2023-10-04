@@ -19,6 +19,7 @@ import {
   _userIsLoggedIn,
   _favoritMovies,
   _isLiked,
+  _isDark,
 } from "../services/atom";
 import { useRecoilState } from "recoil";
 import Grid from "@mui/joy/Grid";
@@ -34,12 +35,12 @@ export default function GradientCover(props) {
   const [user, setUser] = useRecoilState(_user);
   let { userId } = useParams();
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
-  const [count, setCount] = useState(0);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [isLiked, setIsLiked] = useRecoilState(_isLiked); // Changed to an object
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
   const [filterLetter, setFilterLetter] = useState("");
+  const [isDark, setIsDark] = useRecoilState(_isDark);
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
     width: "80%",
@@ -58,12 +59,14 @@ export default function GradientCover(props) {
           ...prevStyle,
           width: "50%",
           marginLeft: "25%",
+          backgroundColor: isDark === "dark" ? "#212121" : "#fff",
         }));
       } else {
         setInputStyle((prevStyle) => ({
           ...prevStyle,
           width: "80%",
           marginLeft: "10%",
+          backgroundColor: isDark == "dark" ? "#212121" : "#fff",
         }));
       }
     };
@@ -72,7 +75,7 @@ export default function GradientCover(props) {
     updateStyle();
 
     return () => window.removeEventListener("resize", updateStyle);
-  }, []);
+  }, [isDark]);
 
   const handleIsLiked = (movieId) => {
     const isAlreadyFavorite = favoriteMovies.some(
@@ -195,11 +198,7 @@ export default function GradientCover(props) {
         sx={{ flexGrow: 1, justifyContent: "center" }}
       >
         {filteredMovies.map((movie) => (
-          <Card
-            sx={{ minHeight: "280px", width: 180, m: 1 }}
-            key={movie.id}
-            onClick={() => handleOpenMovie(movie.id)}
-          >
+          <Card sx={{ minHeight: "280px", width: 180, m: 1 }} key={movie.id}>
             <CardCover>
               <img src={`${imgPath + movie.poster_path}`} />
             </CardCover>
@@ -215,7 +214,11 @@ export default function GradientCover(props) {
                 to={`/movie/${movie.id}`}
                 key={movie.id}
               >
-                <Typography level="title-lg" textColor="#fff">
+                <Typography
+                  level="title-lg"
+                  textColor="#fff"
+                  onClick={() => handleOpenMovie(movie.id)}
+                >
                   {movie.title}
                 </Typography>
               </Link>
