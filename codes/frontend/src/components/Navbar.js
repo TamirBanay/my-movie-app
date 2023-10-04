@@ -14,19 +14,25 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useRecoilState } from "recoil";
 import {
   _movieIsOpen,
   _movieId,
   _userIsLoggedIn,
   _currentUserId,
+  _isDark,
 } from "../services/atom";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
+  const [isDark, setIsDark] = useRecoilState(_isDark);
+  const toggleIsDark = () => {
+    setIsDark((curr) => (curr === "light" ? "dark" : "light"));
+  };
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
@@ -63,6 +69,7 @@ function ResponsiveAppBar() {
       console.log("Logged out successfully");
       localStorage.removeItem("token");
       localStorage.removeItem("userID");
+      setIsDark("light");
       navigate("/login");
       setUserIsLoggedIn(false);
       setAnchorElUser(false);
@@ -176,8 +183,16 @@ function ResponsiveAppBar() {
               </Button>
             )}
           </Box>
+
           {userIsLoggedIn ? (
             <Box sx={{ flexGrow: 0 }}>
+              <IconButton sx={{ p: 2 }} onClick={toggleIsDark}>
+                {isDark === "dark" ? (
+                  <DarkModeOutlinedIcon />
+                ) : (
+                  <DarkModeIcon />
+                )}
+              </IconButton>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

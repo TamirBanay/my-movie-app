@@ -83,18 +83,25 @@ function FaviritMovies() {
   };
 
   return (
-    <div>
+    <div style={{ minHeight: "100vh" }}>
       <p />
       <Grid
         container
         spacing={0}
-        sx={{ flexGrow: 1, justifyContent: "center" }}
+        sx={{
+          flexGrow: 1,
+          justifyContent: "center",
+        }}
       >
         {favoritMovies.length == 0
           ? "There is no movies in the list"
           : favoritMovies.map((movie) => (
               <Card
-                sx={{ minHeight: "280px", width: 180, m: 1 }}
+                sx={{
+                  minHeight: "280px",
+                  width: 180,
+                  m: 1,
+                }}
                 key={movie.id}
               >
                 <CardCover>

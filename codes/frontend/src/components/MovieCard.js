@@ -8,11 +8,16 @@ import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
 import { Link, useParams } from "react-router-dom";
 
-import { _movieIsOpen, _movieId, _currentUserId } from "../services/atom";
+import {
+  _movieIsOpen,
+  _movieId,
+  _currentUserId,
+  _isDark,
+} from "../services/atom";
 
 export default function BasicCard() {
   const { id } = useParams();
-
+  const [isDark, setIsDark] = useRecoilState(_isDark);
   const [movieIsOpen, setMovieIsOpen] = useRecoilState(_movieIsOpen);
   const [movieId, setMovieId] = useRecoilState(_movieId);
   const [movie, setMovie] = useState({});
@@ -42,18 +47,32 @@ export default function BasicCard() {
   useEffect(() => {
     fetchMovieData();
   }, [id]);
-  console.log(id);
+  console.log(isDark);
   return (
     <div>
+      <p />
       <Grid
         container
         spacing={0}
         sx={{ flexGrow: 1, justifyContent: "center" }}
       >
-        <Card sx={{ width: 620, height: "auto", m: "auto" }}>
+        <Card
+          sx={{
+            backgroundColor: isDark === "dark" ? "#212121" : "",
+            width: 520,
+          }}
+        >
           <div>
-            <Typography level="title-lg">{movie.title}</Typography>
-            <Typography level="body-sm">
+            <Typography
+              level="title-lg"
+              sx={{ color: isDark === "dark" ? "white" : "" }}
+            >
+              {movie.title}
+            </Typography>
+            <Typography
+              level="body-sm"
+              sx={{ color: isDark === "dark" ? "white" : "" }}
+            >
               Release: {movie.release_date}
             </Typography>
           </div>
@@ -64,10 +83,17 @@ export default function BasicCard() {
           </AspectRatio>
           <CardContent orientation="horizontal">
             <div>
-              <Typography level="body-md">
+              <Typography
+                level="body-md"
+                sx={{ color: isDark === "dark" ? "white" : "" }}
+              >
                 Rating: {movie.vote_average}
               </Typography>
-              <Typography fontSize="lg" fontWeight="lg">
+              <Typography
+                fontSize="lg"
+                fontWeight="lg"
+                sx={{ color: isDark === "dark" ? "white" : "" }}
+              >
                 Overview:{" "}
                 <Typography fontSize="lg" fontWeight="sm">
                   {movie.overview}
@@ -82,7 +108,6 @@ export default function BasicCard() {
                 color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{
-                  // ml: "auto",
                   alignSelf: "center",
                   fontWeight: 600,
                   m: "auto",
@@ -94,9 +119,6 @@ export default function BasicCard() {
           </CardContent>
         </Card>
       </Grid>
-      <p />
-
-      <p />
     </div>
   );
 }
