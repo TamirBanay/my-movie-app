@@ -60,6 +60,7 @@ export default function GradientCover(props) {
           width: "50%",
           marginLeft: "25%",
           backgroundColor: isDark === "dark" ? "#212121" : "#fff",
+          color: isDark === "dark" ? "#fff" : "",
         }));
       } else {
         setInputStyle((prevStyle) => ({
@@ -67,6 +68,7 @@ export default function GradientCover(props) {
           width: "80%",
           marginLeft: "10%",
           backgroundColor: isDark == "dark" ? "#212121" : "#fff",
+          color: isDark === "dark" ? "#fff" : "",
         }));
       }
     };

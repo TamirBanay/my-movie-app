@@ -43,5 +43,5 @@ export const _isLiked = atom({
 });
 export const _isDark = atom({
   key: "_isDark",
-  default: "dark",
+  default: localStorage.getItem("theme") || "light", // use the stored theme or fallback to "light"
 });
