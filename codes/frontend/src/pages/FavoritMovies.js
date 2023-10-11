@@ -18,21 +18,24 @@ import {
   _favoritMovies,
   _isLiked,
   _favoritMoviesDetails,
+  _isDark,
 } from "../services/atom";
 import Favorite from "@mui/icons-material/Favorite";
 
 function FavoritMovies() {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
+  const [isDark, setIsDark] = useRecoilState(_isDark);
 
   const [favoritMovies, setFavoritMovie] = useRecoilState(
     _favoritMoviesDetails
   );
+  const theme = localStorage.getItem("theme");
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
   const userIsLoggedIn = localStorage.getItem("isLoggedIn");
   const imgPath = "https://image.tmdb.org/t/p/original/";
-
+  console.log(favoriteMovies.length);
   const fetchMovieData = async () => {
     const moviesData = await Promise.all(
       favoriteMovies.map((movie) =>
@@ -57,6 +60,8 @@ function FavoritMovies() {
     if (favoriteMovies.length > 0) {
       fetchMovieData();
       localStorage.setItem("favoriteMovies", JSON.stringify(favoriteMovies));
+    } else {
+      localStorage.removeItem("favoriteMovies");
     }
   }, [favoriteMovies]);
   const initializeFavoritesFromLocalStorage = () => {
@@ -70,7 +75,6 @@ function FavoritMovies() {
   }, []);
 
   const removeFromFavorit = (movieId) => {
-
     const url = `http://localhost:8000/remove_favorite/${movieId}/${UserID}/`;
     fetch(url, {
       method: "DELETE",
@@ -94,7 +98,11 @@ function FavoritMovies() {
   };
 
   return (
-    <div style={{ minHeight: "100vh" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+      }}
+    >
       <p />
       <Grid
         container
@@ -104,54 +112,61 @@ function FavoritMovies() {
           justifyContent: "center",
         }}
       >
-        {favoritMovies.length == 0
-          ? "There is no movies in the list"
-          : favoritMovies.map((movie) => (
-              <Card
+        {favoriteMovies.length == 0 ? (
+          <div>
+            <p />
+            <Typography
+              level="title-lg"
+              textColor={isDark === "dark" ? "#fff" : "#000"}
+            >
+              There is no favorite movies
+            </Typography>
+          </div>
+        ) : (
+          favoritMovies.map((movie) => (
+            <Card
+              sx={{
+                minHeight: "280px",
+                width: 180,
+                m: 1,
+              }}
+              key={movie.id}
+            >
+              <CardCover>
+                <img src={`${imgPath + movie.poster_path}`} alt={movie.title} />
+              </CardCover>
+              <CardCover
                 sx={{
-                  minHeight: "280px",
-                  width: 180,
-                  m: 1,
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
                 }}
-                key={movie.id}
-              >
-                <CardCover>
-                  <img
-                    src={`${imgPath + movie.poster_path}`}
-                    alt={movie.title}
-                  />
-                </CardCover>
-                <CardCover
-                  sx={{
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
-                  }}
-                />
-                <CardContent sx={{ justifyContent: "flex-end" }}>
-                  <Link
-                    style={{ color: "#000", textDecoration: "none" }}
-                    to={`/movie/${movie.id}`}
-                    key={movie.id}
-                  >
-                    <Typography level="title-lg" textColor="#fff">
-                      {movie.title}
-                    </Typography>
-                  </Link>
-                  <Typography
-                    startDecorator={
-                      <Favorite
-                        onClick={() => removeFromFavorit(movie.id)}
-                        color="warning"
-                        // onClick={() => handleIsLiked(movie.id, movie.title)}
-                      />
-                    }
-                    textColor="neutral.300"
-                  >
-                    Remove from list
+              />
+              <CardContent sx={{ justifyContent: "flex-end" }}>
+                <Link
+                  style={{ color: "#000", textDecoration: "none" }}
+                  to={`/movie/${movie.id}`}
+                  key={movie.id}
+                >
+                  <Typography level="title-lg" textColor="#fff">
+                    {movie.title}
                   </Typography>
-                </CardContent>
-              </Card>
-            ))}
+                </Link>
+                <Typography
+                  startDecorator={
+                    <Favorite
+                      onClick={() => removeFromFavorit(movie.id)}
+                      color="warning"
+                      // onClick={() => handleIsLiked(movie.id, movie.title)}
+                    />
+                  }
+                  textColor="neutral.300"
+                >
+                  Remove from list
+                </Typography>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </Grid>
     </div>
   );
