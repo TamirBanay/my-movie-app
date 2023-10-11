@@ -25,17 +25,17 @@ import Favorite from "@mui/icons-material/Favorite";
 function FavoritMovies() {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
+  const [isDark, setIsDark] = useRecoilState(_isDark);
 
   const [favoritMovies, setFavoritMovie] = useRecoilState(
     _favoritMoviesDetails
   );
-  const isDark = localStorage.getItem("theme");
+  const theme = localStorage.getItem("theme");
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
   const userIsLoggedIn = localStorage.getItem("isLoggedIn");
   const imgPath = "https://image.tmdb.org/t/p/original/";
   console.log(favoriteMovies.length);
-  console.log(isDark);
   const fetchMovieData = async () => {
     const moviesData = await Promise.all(
       favoriteMovies.map((movie) =>
@@ -113,7 +113,15 @@ function FavoritMovies() {
         }}
       >
         {favoriteMovies.length == 0 ? (
-          <div>There is no movies in the list</div>
+          <div>
+            <p />
+            <Typography
+              level="title-lg"
+              textColor={isDark === "dark" ? "#fff" : "#000"}
+            >
+              There is no favorite movies
+            </Typography>
+          </div>
         ) : (
           favoritMovies.map((movie) => (
             <Card
