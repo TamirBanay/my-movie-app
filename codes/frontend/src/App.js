@@ -19,6 +19,7 @@ import {
   _userIsLoggedIn,
   _user,
   _isDark,
+  _selectType,
 } from "./services/atom";
 import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
@@ -36,6 +37,7 @@ function App() {
   let { userId } = useParams();
   const [user, setUser] = useRecoilState(_user);
   const [isDark, setIsDark] = useRecoilState(_isDark);
+  const [selectType, setSelectType] = useRecoilState(_selectType);
 
   const fetchUserData = () => {
     if (currentUserId) {
@@ -66,7 +68,7 @@ function App() {
     };
 
     fetch(
-      `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${currentPage}`,
+      `https://api.themoviedb.org/3/movie/${selectType}?language=en-US&page=${currentPage}`,
       options
     )
       .then((response) => response.json())
@@ -76,7 +78,7 @@ function App() {
 
   useEffect(() => {
     fetchMoviesData();
-  }, [currentPage]);
+  }, [currentPage, selectType]);
 
   useEffect(() => {
     localStorage.setItem("theme", isDark);

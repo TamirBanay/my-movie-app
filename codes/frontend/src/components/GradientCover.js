@@ -7,7 +7,7 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Favorite from "@mui/icons-material/Favorite";
 import IconButton from "@mui/joy/IconButton";
 import { CardMedia } from "@mui/material";
-import Search from "./Search";
+import SelectCategory from "./SelectCategory";
 import { useEffect, useState } from "react";
 import {
   _moviesList,
@@ -43,8 +43,8 @@ export default function GradientCover(props) {
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
-    width: "80%",
-    height: "40px",
+
+    height: "20px",
     marginLeft: "10%",
     padding: "10px",
     border: "2px solid #4a90e2",
@@ -185,6 +185,7 @@ export default function GradientCover(props) {
   return (
     <div>
       <p />
+      <SelectCategory />
       <input
         style={inputStyle}
         type="text"

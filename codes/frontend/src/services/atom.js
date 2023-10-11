@@ -45,3 +45,7 @@ export const _isDark = atom({
   key: "_isDark",
   default: localStorage.getItem("theme") || "light", // use the stored theme or fallback to "light"
 });
+export const _selectType = atom({
+  key: "_selectType",
+  default: "now_playing", // use the stored theme or fallback to "light"
+});
