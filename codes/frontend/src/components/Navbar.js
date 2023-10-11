@@ -35,7 +35,7 @@ function ResponsiveAppBar() {
   };
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+  // const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const navigate = useNavigate();
 
@@ -54,7 +54,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
   const token = localStorage.getItem("token"); // Replace with the actual token
-
+  const userIsLoggedIn = localStorage.getItem("isLoggedIn");
   async function handleLogout() {
     const response = await fetch("http://localhost:8000/api/logout/", {
       method: "POST",
@@ -69,10 +69,12 @@ function ResponsiveAppBar() {
       console.log("Logged out successfully");
       localStorage.removeItem("token");
       localStorage.removeItem("userID");
+      localStorage.removeItem("isLoggedIn");
       setIsDark("light");
-      navigate("/login");
-      setUserIsLoggedIn(false);
       setAnchorElUser(false);
+      setCurrentUserId(null);
+
+      navigate("/login");
       // Clear the token from local storage
     } else {
       // Logout failed

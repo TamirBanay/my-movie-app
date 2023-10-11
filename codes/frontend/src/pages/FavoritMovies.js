@@ -21,9 +21,8 @@ import {
 } from "../services/atom";
 import Favorite from "@mui/icons-material/Favorite";
 
-function FaviritMovies() {
+function FavoritMovies() {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
-  const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
 
   const [favoritMovies, setFavoritMovie] = useRecoilState(
@@ -31,7 +30,7 @@ function FaviritMovies() {
   );
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
-
+  const userIsLoggedIn = localStorage.getItem("isLoggedIn");
   const imgPath = "https://image.tmdb.org/t/p/original/";
 
   const fetchMovieData = async () => {
@@ -55,12 +54,24 @@ function FaviritMovies() {
   };
 
   useEffect(() => {
-    fetchMovieData();
+    if (favoriteMovies.length > 0) {
+      fetchMovieData();
+      localStorage.setItem("favoriteMovies", JSON.stringify(favoriteMovies));
+    }
   }, [favoriteMovies]);
+  const initializeFavoritesFromLocalStorage = () => {
+    const storedFavoriteMovies = localStorage.getItem("favoriteMovies");
+    if (storedFavoriteMovies) {
+      setFavoriteMovies(JSON.parse(storedFavoriteMovies));
+    }
+  };
+  useEffect(() => {
+    initializeFavoritesFromLocalStorage();
+  }, []);
 
   const removeFromFavorit = (movieId) => {
-    console.log(movieId);
-    const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
+
+    const url = `http://localhost:8000/remove_favorite/${movieId}/${UserID}/`;
     fetch(url, {
       method: "DELETE",
       headers: {
@@ -146,4 +157,4 @@ function FaviritMovies() {
   );
 }
 
-export default FaviritMovies;
+export default FavoritMovies;
