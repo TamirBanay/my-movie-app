@@ -79,6 +79,10 @@ function App() {
   }, [currentPage]);
 
   useEffect(() => {
+    localStorage.setItem("theme", isDark);
+  }, [isDark]);
+
+  useEffect(() => {
     fetchUserData();
   }, [userId]);
   const toggleIsDark = () => {
