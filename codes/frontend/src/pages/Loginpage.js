@@ -41,8 +41,6 @@ function Login() {
   let { userId } = useParams();
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
 
-
-  
   const handleLogin = async () => {
     const url = "http://localhost:8000/api/login/";
     const credentials = {
@@ -64,7 +62,7 @@ function Login() {
         const data = await response.json();
         localStorage.setItem("token", data.access);
         localStorage.setItem("userID", data.user.id);
-        setUserIsLoggedIn(true);
+        localStorage.setItem("isLoggedIn", true);
         setCurrentUserId(data.user.id);
         if (data.user.id) {
           navigate(`/${data.user.id}`);

@@ -24,7 +24,7 @@ import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
 import Login from "./pages/Loginpage";
 import SignUp from "./pages/SignUp";
-import FaviritMovies from "./pages/FaviritMovies";
+import FavoritMovies from "./pages/FavoritMovies";
 export const ThemeContext = createContext(null);
 
 function App() {
@@ -100,7 +100,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route
               path="/:currentUserId/favorits"
-              element={<FaviritMovies />}
+              element={<FavoritMovies />}
             />
           </Routes>
         </HashRouter>
