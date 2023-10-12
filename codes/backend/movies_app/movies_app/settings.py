@@ -59,6 +59,8 @@ LOGIN_URL = 'login'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  
+    "http://localhost:8080",
+
 ]
 AUTH_USER_MODEL = 'members.CustomUser'
 

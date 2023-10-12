@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
-import { _userIsLoggedIn, _currentUserId } from "../services/atom";
+import { _userIsLoggedIn, _currentUserId, _user } from "../services/atom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -35,6 +35,8 @@ const defaultTheme = createTheme();
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useRecoilState(_user);
+
   const [error, setError] = useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const navigate = useNavigate();
@@ -64,6 +66,7 @@ function Login() {
         localStorage.setItem("userID", data.user.id);
         localStorage.setItem("isLoggedIn", true);
         setCurrentUserId(data.user.id);
+        setUser(data);
         if (data.user.id) {
           navigate(`/${data.user.id}`);
         } else {
