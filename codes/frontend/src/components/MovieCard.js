@@ -16,10 +16,9 @@ import {
 } from "../services/atom";
 
 export default function BasicCard() {
-  const { id } = useParams();
+  const { movieId } = useParams();
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [movieIsOpen, setMovieIsOpen] = useRecoilState(_movieIsOpen);
-  const [movieId, setMovieId] = useRecoilState(_movieId);
   const [movie, setMovie] = useState({});
   const imgPath = "https://image.tmdb.org/t/p/original/";
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
@@ -38,7 +37,10 @@ export default function BasicCard() {
       },
     };
 
-    fetch(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, options)
+    fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
+      options
+    )
       .then((response) => response.json())
       .then((response) => setMovie(response))
       .catch((err) => console.error(err));
@@ -46,7 +48,7 @@ export default function BasicCard() {
 
   useEffect(() => {
     fetchMovieData();
-  }, [id]);
+  }, [movieId]);
   return (
     <div>
       <p />
