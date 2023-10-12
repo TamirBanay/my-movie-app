@@ -35,7 +35,6 @@ function FavoritMovies() {
   const csrfToken = localStorage.getItem("token");
   const userIsLoggedIn = localStorage.getItem("isLoggedIn");
   const imgPath = "https://image.tmdb.org/t/p/original/";
-  console.log(favoriteMovies.length);
   const fetchMovieData = async () => {
     const moviesData = await Promise.all(
       favoriteMovies.map((movie) =>

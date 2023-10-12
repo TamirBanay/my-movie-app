@@ -47,7 +47,6 @@ export default function BasicCard() {
   useEffect(() => {
     fetchMovieData();
   }, [id]);
-  console.log(isDark);
   return (
     <div>
       <p />

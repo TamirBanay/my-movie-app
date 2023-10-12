@@ -24,6 +24,8 @@ import {
 import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
 import Login from "./pages/Loginpage";
+import Profile from "./pages/Profile";
+
 import SignUp from "./pages/SignUp";
 import FavoritMovies from "./pages/FavoritMovies";
 export const ThemeContext = createContext(null);
@@ -41,7 +43,7 @@ function App() {
 
   const fetchUserData = () => {
     if (currentUserId) {
-      fetch(`http://localhost:8000/api/user/${userId}/`)
+      fetch(`http://localhost:8000/api/user_detail/${userId}/`)
         .then((response) => response.json())
         .then((data) => {
           setUser(data);
@@ -97,9 +99,10 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/:currentUserId" element={<Home />} />
-            <Route path="/movie/:id" element={<Movie />} />
+            <Route path="/movie/:movieId" element={<Movie />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/:currentUserId/profile" element={<Profile />} />
             <Route
               path="/:currentUserId/favorits"
               element={<FavoritMovies />}

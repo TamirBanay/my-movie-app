@@ -81,7 +81,9 @@ function ResponsiveAppBar() {
       console.error("Logout failed:", response.statusText);
     }
   }
-
+  const handleProfile = () => {
+    navigate(`/${currentUserId}/profile`);
+  };
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -190,9 +192,13 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 0 }}>
               <IconButton sx={{ p: 2 }} onClick={toggleIsDark}>
                 {isDark === "dark" ? (
-                  <DarkModeOutlinedIcon />
+                  <Tooltip title="light Mode">
+                    <DarkModeOutlinedIcon />
+                  </Tooltip>
                 ) : (
-                  <DarkModeIcon />
+                  <Tooltip title="Dark Mode">
+                    <DarkModeIcon />
+                  </Tooltip>
                 )}
               </IconButton>
               <Tooltip title="Open settings">
@@ -216,6 +222,9 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem onClick={handleProfile}>
+                  <Typography textAlign="center">Profile</Typography>
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>

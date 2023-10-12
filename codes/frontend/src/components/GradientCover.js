@@ -144,7 +144,7 @@ export default function GradientCover(props) {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/user/${UserID}/`)
+    fetch(`http://localhost:8000/api/user_detail/${UserID}/`)
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
