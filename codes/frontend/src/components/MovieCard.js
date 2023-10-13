@@ -7,6 +7,7 @@ import CardContent from "@mui/joy/CardContent";
 import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
 import { Link, useParams } from "react-router-dom";
+import RatingStars from "./RatingStars";
 
 import {
   _movieIsOpen,
@@ -70,6 +71,7 @@ export default function BasicCard() {
             >
               {movie.title}
             </Typography>
+
             <Typography
               level="body-sm"
               sx={{ color: isDark === "dark" ? "white" : "" }}
