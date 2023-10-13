@@ -14,27 +14,39 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
+import Badge from "@mui/material/Badge";
 import { Link } from "react-router-dom";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useRecoilState } from "recoil";
+import { styled } from "@mui/material/styles";
+
 import {
   _movieIsOpen,
   _movieId,
   _userIsLoggedIn,
   _currentUserId,
   _isDark,
+  _favoritMovies,
 } from "../services/atom";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -23,
+    top: 13,
+    padding: "4px 12px",
+  },
+}));
 
 function ResponsiveAppBar() {
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const toggleIsDark = () => {
     setIsDark((curr) => (curr === "light" ? "dark" : "light"));
   };
+  const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
@@ -138,12 +150,17 @@ function ResponsiveAppBar() {
               }}
             >
               {userIsLoggedIn ? (
-                <MenuItem onClick={handleCloseNavMenu}>
+                <MenuItem onClick={handleCloseNavMenu} sx={{ width: "130px" }}>
                   <Link
                     to={`/${currentUserId}/favorits`}
                     style={{ color: "#000", textDecoration: "none" }}
                   >
-                    Favorite
+                    <StyledBadge
+                      badgeContent={favoriteMovies.length}
+                      color="primary"
+                    >
+                      Favorites
+                    </StyledBadge>
                   </Link>
                 </MenuItem>
               ) : (
@@ -177,7 +194,16 @@ function ResponsiveAppBar() {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                MY Favorites
+                <Badge
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  badgeContent={favoriteMovies.length}
+                  color="secondary"
+                >
+                  MY Favorites
+                </Badge>
               </Button>
             ) : (
               <Button

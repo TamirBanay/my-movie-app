@@ -26,7 +26,7 @@ import Grid from "@mui/joy/Grid";
 import DotsMobileStepper from "./DotsMobileStepper";
 import MovieCard from "./MovieCard";
 import { Link, useParams } from "react-router-dom";
-
+import AlertNotifications from "./AlertNotifications";
 export default function GradientCover(props) {
   const [movies, setMovies] = useRecoilState(_moviesList);
   const [movieIsOpen, setMovieIsOpen] = useRecoilState(_movieIsOpen);
@@ -41,9 +41,11 @@ export default function GradientCover(props) {
   const csrfToken = localStorage.getItem("token");
   const [filterLetter, setFilterLetter] = useState("");
   const [isDark, setIsDark] = useRecoilState(_isDark);
+  const [showAlertSuccessAddMovie, setShowAlertSuccessAddMovie] =
+    useState(false);
+  const [showAlertDeleteMovie, setShowAlertDeleteMovie] = useState(false);
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
-
     height: "20px",
     marginLeft: "10%",
     padding: "10px",
@@ -108,6 +110,10 @@ export default function GradientCover(props) {
       })
         .then((response) => response.json())
         .then((response) => {
+          setShowAlertSuccessAddMovie(true);
+          setTimeout(() => {
+            setShowAlertSuccessAddMovie(false);
+          }, 3000);
           console.log(JSON.stringify(response));
           setFavoriteMovies((prevState) => [
             ...prevState,
@@ -130,7 +136,11 @@ export default function GradientCover(props) {
       })
         .then((response) => {
           if (response.ok) {
-            console.log("Movie removed successfully");
+            setShowAlertDeleteMovie(true);
+            setTimeout(() => {
+              setShowAlertDeleteMovie(false);
+            }, 3000);
+
             setFavoriteMovies((prevState) =>
               prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
             );
@@ -193,7 +203,6 @@ export default function GradientCover(props) {
         onChange={(e) => setFilterLetter(e.target.value)}
       />
       <p />
-
       <Grid
         container
         spacing={0}
@@ -251,6 +260,13 @@ export default function GradientCover(props) {
         ))}
       </Grid>
       <p />
+      {showAlertSuccessAddMovie && (
+        <AlertNotifications text={"Movie add to list Successfully"} />
+      )}
+      {showAlertDeleteMovie && (
+        <AlertNotifications text={"Movie deleted from the list Successfully"} />
+      )}
+
       {movieIsOpen ? "" : <DotsMobileStepper />}
     </div>
   );
