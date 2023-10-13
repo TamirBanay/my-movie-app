@@ -5,8 +5,8 @@ import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Grid from "@mui/joy/Grid";
-import { Link } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useHistory } from "react";
 import {
   _moviesList,
   _currentPage,
@@ -21,11 +21,13 @@ import {
   _isDark,
 } from "../services/atom";
 import Favorite from "@mui/icons-material/Favorite";
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 
 function FavoritMovies() {
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
   const [isDark, setIsDark] = useRecoilState(_isDark);
+  const navigate = useNavigate();
 
   const [favoritMovies, setFavoritMovie] = useRecoilState(
     _favoritMoviesDetails
@@ -94,7 +96,9 @@ function FavoritMovies() {
       })
       .catch((error) => console.error("Error:", error));
   };
-
+  const handleRoutToTrailer = (movieID) => {
+    navigate(`/${currentUserId}/trailer/${movieID}`);
+  };
   return (
     <div
       style={{
@@ -162,6 +166,14 @@ function FavoritMovies() {
                   Remove from list
                 </Typography>
               </CardContent>
+              <IconButton
+                sx={{
+                  bgcolor: "#D0E7D2",
+                }}
+                onClick={() => handleRoutToTrailer(movie.id)} // Here is the attachment
+              >
+                <PlayArrowOutlinedIcon /> Watch Trailer
+              </IconButton>
             </Card>
           ))
         )}

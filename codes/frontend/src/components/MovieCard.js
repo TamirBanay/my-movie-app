@@ -6,7 +6,7 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Button from "@mui/joy/Button";
 import Grid from "@mui/joy/Grid";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import RatingStars from "./RatingStars";
 
 import {
@@ -18,15 +18,12 @@ import {
 
 export default function BasicCard() {
   const { movieId } = useParams();
+  let navigate = useNavigate();
+
   const [isDark, setIsDark] = useRecoilState(_isDark);
-  const [movieIsOpen, setMovieIsOpen] = useRecoilState(_movieIsOpen);
   const [movie, setMovie] = useState({});
   const imgPath = "https://image.tmdb.org/t/p/original/";
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
-
-  const handleOpenMovie = () => {
-    setMovieIsOpen(!movieIsOpen);
-  };
 
   const fetchMovieData = () => {
     const options = {
@@ -105,7 +102,7 @@ export default function BasicCard() {
             </div>
             <Link to={`/${currentUserId}`} style={{ marginTop: "auto" }}>
               <Button
-                onClick={handleOpenMovie}
+                onClick={() => navigate(-1)}
                 variant="solid"
                 size="lg"
                 color="primary"
