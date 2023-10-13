@@ -20,6 +20,9 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import AddFavoriteView,RemoveFavoriteView,FavoriteMoviesView
 from members.views import LoginView
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework_simplejwt import views as jwt_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('members.urls')),  # This includes the members app URLs under the path 'api/'
@@ -27,6 +30,5 @@ urlpatterns = [
     path('remove_favorite/<int:tmdb_movie_id>/<int:user_id>/', RemoveFavoriteView.as_view(), name='remove_favorite'),
     path('favorite_movies/<int:user_id>/', FavoriteMoviesView.as_view(), name='favorite_movies'),
     path('accounts/login/', LoginView.as_view(), name='login'),
-
 
 ]
