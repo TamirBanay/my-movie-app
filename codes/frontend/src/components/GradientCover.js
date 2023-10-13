@@ -10,6 +10,9 @@ import { CardMedia } from "@mui/material";
 import SelectCategory from "./SelectCategory";
 import { useEffect, useState } from "react";
 import RatingStars from "./RatingStars";
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import { useNavigate } from "react-router-dom";
+
 import {
   _moviesList,
   _currentPage,
@@ -42,6 +45,8 @@ export default function GradientCover(props) {
   const csrfToken = localStorage.getItem("token");
   const [filterLetter, setFilterLetter] = useState("");
   const [isDark, setIsDark] = useRecoilState(_isDark);
+  const navigate = useNavigate();
+
   const [showAlertSuccessAddMovie, setShowAlertSuccessAddMovie] =
     useState(false);
   const [showAlertDeleteMovie, setShowAlertDeleteMovie] = useState(false);
@@ -169,6 +174,9 @@ export default function GradientCover(props) {
     setMovieIsOpen(!movieIsOpen);
     setMovieId(movieID);
   };
+  const handleRoutToTrailer = (movieID) => {
+    navigate(`/${currentUserId}/trailer/${movieID}`);
+  };
 
   const fetchFavoriteMovies = (UserID) => {
     fetch(`http://localhost:8000/favorite_movies/${UserID}/`)
@@ -213,15 +221,16 @@ export default function GradientCover(props) {
             <CardCover>
               <img src={`${imgPath + movie.poster_path}`} />
             </CardCover>
+            <RatingStars rating={movie.vote_average} />
+
             <CardCover
               sx={{
                 background:
                   "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
               }}
             />
-            <CardContent sx={{ justifyContent: "flex-end" }}>
-              <RatingStars rating={movie.vote_average} />
 
+            <CardContent sx={{ justifyContent: "flex-end" }}>
               <Link
                 style={{ color: "#000", textDecoration: "none" }}
                 to={`/movie/${movie.id}`}
@@ -258,6 +267,14 @@ export default function GradientCover(props) {
                   : "Add from favorites"}
               </Typography>
             </CardContent>
+            <IconButton
+              sx={{
+                bgcolor: "#D0E7D2",
+              }}
+              onClick={() => handleRoutToTrailer(movie.id)} // Here is the attachment
+            >
+              <PlayArrowOutlinedIcon /> Watch Trailer
+            </IconButton>
           </Card>
         ))}
       </Grid>
