@@ -114,7 +114,6 @@ export default function GradientCover(props) {
           setTimeout(() => {
             setShowAlertSuccessAddMovie(false);
           }, 3000);
-          console.log(JSON.stringify(response));
           setFavoriteMovies((prevState) => [
             ...prevState,
             { tmdb_movie_id: movieId }, // Assuming the data structure is like this
