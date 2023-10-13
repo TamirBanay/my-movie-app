@@ -20,7 +20,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useRecoilState } from "recoil";
 import { styled } from "@mui/material/styles";
-
+import MovieCreationTwoToneIcon from "@mui/icons-material/MovieCreationTwoTone";
 import {
   _movieIsOpen,
   _movieId,
@@ -101,7 +101,9 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <MovieCreationTwoToneIcon
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -168,7 +170,9 @@ function ResponsiveAppBar() {
               )}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <MovieCreationTwoToneIcon
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+          />
           <Typography
             variant="h5"
             noWrap

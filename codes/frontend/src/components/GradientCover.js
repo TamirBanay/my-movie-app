@@ -9,6 +9,7 @@ import IconButton from "@mui/joy/IconButton";
 import { CardMedia } from "@mui/material";
 import SelectCategory from "./SelectCategory";
 import { useEffect, useState } from "react";
+import RatingStars from "./RatingStars";
 import {
   _moviesList,
   _currentPage,
@@ -219,6 +220,8 @@ export default function GradientCover(props) {
               }}
             />
             <CardContent sx={{ justifyContent: "flex-end" }}>
+              <RatingStars rating={movie.vote_average} />
+
               <Link
                 style={{ color: "#000", textDecoration: "none" }}
                 to={`/movie/${movie.id}`}
