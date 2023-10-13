@@ -25,12 +25,12 @@ import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
 import Login from "./pages/Loginpage";
 import Profile from "./pages/Profile";
-
+import CheckToken from "./components/CheckToken";
 import SignUp from "./pages/SignUp";
 import FavoritMovies from "./pages/FavoritMovies";
 export const ThemeContext = createContext(null);
 
-function App() {
+function App(props) {
   const [movies, setMovies] = useRecoilState(_moviesList);
   const [currentPage, setCurrentPage] = useRecoilState(_currentPage);
   const [movieId, setMovieId] = useRecoilState(_movieId);
@@ -93,24 +93,20 @@ function App() {
     setIsDark((curr) => (curr === "light" ? "dark" : "light"));
   };
   return (
-    <ThemeContext.Provider value={{ isDark, toggleIsDark }}>
-      <div className="App" id={isDark} style={{ minHeight: "100vh" }}>
-        <HashRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/:currentUserId" element={<Home />} />
-            <Route path="/movie/:movieId" element={<Movie />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/:currentUserId/profile" element={<Profile />} />
-            <Route
-              path="/:currentUserId/favorits"
-              element={<FavoritMovies />}
-            />
-          </Routes>
-        </HashRouter>
-      </div>
-    </ThemeContext.Provider>
+    <div className="App" id={isDark} style={{ minHeight: "100vh" }}>
+      <HashRouter>
+        <CheckToken />
+        <Navbar />
+        <Routes>
+          <Route path="/:currentUserId" element={<Home />} />
+          <Route path="/movie/:movieId" element={<Movie />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/:currentUserId/profile" element={<Profile />} />
+          <Route path="/:currentUserId/favorits" element={<FavoritMovies />} />
+        </Routes>
+      </HashRouter>
+    </div>
   );
 }
 

@@ -13,7 +13,15 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { useEffect } from "react";
 
+import {
+  _userIsLoggedIn,
+  _currentUserId,
+  _user,
+  _isDark,
+} from "../services/atom";
 function Copyright(props) {
   return (
     <Typography
@@ -31,8 +39,14 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const navigate = useNavigate();
+  const [isDark, setIsDark] = useRecoilState(_isDark);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+  useEffect(() => {
+    setUserIsLoggedIn(false);
+    setIsDark("light");
+  }, [userIsLoggedIn, isDark]);
 
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = {
