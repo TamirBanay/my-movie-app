@@ -67,8 +67,6 @@ function ResponsiveAppBar() {
     });
 
     if (response.ok) {
-      // Logout successful
-      console.log("Logged out successfully");
       localStorage.removeItem("token");
       localStorage.removeItem("userID");
       localStorage.setItem("isLoggedIn", false);

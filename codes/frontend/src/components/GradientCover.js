@@ -92,7 +92,6 @@ export default function GradientCover(props) {
 
     if (newIsLiked) {
       if (isAlreadyFavorite) {
-        console.log("Movie is already in favorites");
         return;
       }
       fetch("http://localhost:8000/add_favorite/", {

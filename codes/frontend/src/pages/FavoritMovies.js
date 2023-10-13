@@ -85,7 +85,6 @@ function FavoritMovies() {
     })
       .then((response) => {
         if (response.ok) {
-          console.log("Movie removed successfully");
           setFavoriteMovies((prevState) =>
             prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
           );
