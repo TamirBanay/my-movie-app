@@ -8,3 +8,11 @@ class Favorite(models.Model):
     
     class Meta:
       unique_together = ('tmdb_movie_id', 'user',)
+      
+      
+class Favorite_Google_Users(models.Model):
+    tmdb_movie_id = models.IntegerField()
+    google_id = models.BigIntegerField()
+    
+    class Meta:
+        unique_together = ('tmdb_movie_id', 'google_id',)
