@@ -55,6 +55,8 @@ export default function SignUp() {
       username: event.currentTarget.username.value,
       email: event.currentTarget.email.value,
       password: event.currentTarget.password.value,
+      isGoogleUser: false,
+      googleID: null,
     };
 
     try {

@@ -72,7 +72,6 @@ function Trailer() {
     fetchMovieData();
   }, [movieId]);
 
-  console.log(movie);
   const centerContentStyle = {
     display: "flex",
     justifyContent: "center",

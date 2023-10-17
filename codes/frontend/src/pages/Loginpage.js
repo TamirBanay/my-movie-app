@@ -20,6 +20,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import { IconButton } from "@mui/material";
 
 function Copyright(props) {
   return (
@@ -40,6 +42,8 @@ const defaultTheme = createTheme();
 function Login(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [succesSignUp, setSuccesSignUp] = useState(false);
+
   const [user, setUser] = useRecoilState(_user);
   const [isDark, setIsDark] = useRecoilState(_isDark);
 
@@ -47,6 +51,85 @@ function Login(props) {
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const navigate = useNavigate();
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
+  const [connectionDetails, setConnectionDetails] = useState([]);
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      setConnectionDetails(codeResponse);
+      getUserGoogleProfile(codeResponse);
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
+  const getUserGoogleProfile = (codeResponse) => {
+    const url = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${codeResponse.access_token}`;
+
+    fetch(url, {
+      headers: {
+        Authorization: `Bearer ${codeResponse.access_token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(async (data) => {
+        setUser(data);
+
+        const googleUserData = {
+          first_name: data.given_name,
+          last_name: data.family_name,
+          username: data.email,
+          email: data.email,
+          password: 1234,
+          isGoogleUser: true,
+          googleID: data.id,
+        };
+
+        try {
+          const response = await fetch("http://localhost:8000/api/signup/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(googleUserData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+          } else {
+            const userData = await response.json();
+            console.log("Signup successful", userData);
+            setUser(userData);
+            console.log(user);
+            handleLoginGoogle(
+              googleUserData.username,
+              googleUserData.password,
+              userData
+            );
+            return;
+          }
+
+          handleLoginGoogle(
+            googleUserData.username,
+            googleUserData.password,
+            user
+          );
+          setUser(data);
+        } catch (error) {
+          console.error("Network error", error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    if (!succesSignUp) {
+    } else {
+    }
+  };
 
   useEffect(() => {
     setUserIsLoggedIn(false);
@@ -82,6 +165,43 @@ function Login(props) {
           navigate(`/${data.user.id}`);
         } else {
           console.error("User ID is null or undefined:", data);
+        }
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
+
+  const handleLoginGoogle = async (username, password, user) => {
+    const url = "http://localhost:8000/api/login/";
+    const credentials = {
+      username,
+      password,
+    };
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.non_field_errors || "Login failed");
+      } else {
+        const user = await response.json();
+        localStorage.setItem("token", user.access);
+        localStorage.setItem("userID", user.user.id);
+        localStorage.setItem("isLoggedIn", true);
+        setUserIsLoggedIn(true);
+        setCurrentUserId(user.user.id);
+        setUser(user);
+
+        if (user.user.id) {
+          navigate(`/${user.user.id}`);
+        } else {
+          console.error("User ID is null or undefined:", user);
         }
       }
     } catch (error) {
@@ -158,6 +278,13 @@ function Login(props) {
               >
                 Sign In
               </Button>
+              <IconButton sx={{ borderRadius: 0 }} onClick={() => login()}>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                <Typography variant="subtitle1" color="#000">
+                  {" "}
+                  Sign in with Google
+                </Typography>
+              </IconButton>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
@@ -171,6 +298,7 @@ function Login(props) {
                 </Grid>
               </Grid>
             </Box>
+            {/* <button onClick={() => login()}>Sign in with Google 🚀 </button> */}
           </Box>
           <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
