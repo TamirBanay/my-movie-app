@@ -70,14 +70,18 @@ class SignupView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
+            print (user)
             return Response({
                 'user': {
                     'id': user.id,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email,
+                    'isGoogleUser': user.isGoogleUser,   # Include the isGoogleUser field
+                    'googleID': user.googleID            # Include the googleID field
                 },
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             })
+          
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

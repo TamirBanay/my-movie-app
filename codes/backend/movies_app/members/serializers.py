@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', "username",'email', 'password']
+        fields = ['first_name', 'last_name', "username",'email', 'password','isGoogleUser','googleID']
         extra_kwargs = {
             'password': {'write_only': True}
         }
