@@ -81,6 +81,7 @@ function ResponsiveAppBar() {
     if (response.ok) {
       localStorage.removeItem("token");
       localStorage.removeItem("userID");
+      localStorage.removeItem("userData");
       localStorage.setItem("isLoggedIn", false);
       setUserIsLoggedIn(false);
       setIsDark("light");
