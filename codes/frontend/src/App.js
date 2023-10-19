@@ -43,7 +43,6 @@ function App(props) {
   const [user, setUser] = useRecoilState(_user);
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [selectType, setSelectType] = useRecoilState(_selectType);
-  console.log(userIsLoggedIn);
   const fetchUserData = () => {
     if (currentUserId) {
       fetch(`http://localhost:8000/api/user_detail/${userId}/`)

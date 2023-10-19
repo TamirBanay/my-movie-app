@@ -74,7 +74,6 @@ function GoogleLogInComponet() {
             const userData = await response.json();
             console.log("Signup successful", userData);
             setUser(userData);
-            console.log(user);
             handleLoginGoogle(
               googleUserData.username,
               googleUserData.password,
