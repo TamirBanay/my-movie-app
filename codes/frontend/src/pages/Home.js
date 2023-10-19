@@ -1,10 +1,19 @@
+import React, { useState, useEffect } from "react";
 import GradientCover from "../components/GradientCover";
+import SkeletonMovies from "../components/Skeletons/SkeletonMovies";
+
 function Home() {
-  return (
-    <div>
-      <GradientCover  />
-    </div>
-  );
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return <div>{showSkeleton ? <SkeletonMovies /> : <GradientCover />}</div>;
 }
 
 export default Home;

@@ -250,7 +250,7 @@ export default function GradientCover(props) {
                   {movie.title}
                 </Typography>
               </Link>
-              {/* {userIsLoggedIn ? ( */}
+
               <Typography
                 startDecorator={
                   <Favorite
@@ -273,7 +273,6 @@ export default function GradientCover(props) {
                   ? "Remove from list"
                   : "Add from favorites"}
               </Typography>
-              {/* ) : ( "" )} */}
             </CardContent>
             <IconButton
               sx={{

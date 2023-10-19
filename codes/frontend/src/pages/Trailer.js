@@ -13,14 +13,26 @@ import {
   _isLiked,
   _isDark,
 } from "../services/atom";
+import Skeleton from "@mui/material/Skeleton";
+
 import { useRecoilState } from "recoil";
 function Trailer() {
   const [videoKey, setVideoKey] = useState(null);
   const { movieId } = useParams();
   const [movie, setMovie] = useState({});
   const [isDark, setIsDark] = useRecoilState(_isDark);
+  const [showSkeleton, setShowSkeleton] = useState(true); // New state for Skeleton timeout
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    // Logic for hiding the skeleton after 2 seconds
+    const skeletonTimer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 500);
+
+    return () => clearTimeout(skeletonTimer);
+  }, []);
   useEffect(() => {
     const fetchTrailer = async () => {
       try {
@@ -77,6 +89,7 @@ function Trailer() {
     justifyContent: "center",
     alignItems: "center",
   };
+
   return (
     <div>
       <h1
@@ -99,7 +112,14 @@ function Trailer() {
             allowFullScreen
           ></iframe>
         ) : (
-          <p>Loading...</p>
+          showSkeleton && (
+            <Skeleton
+              variant="rectangular"
+              width="60%"
+              height="615px"
+              animation="wave"
+            />
+          )
         )}
       </div>
       <div style={{ textAlign: "center" }}>
