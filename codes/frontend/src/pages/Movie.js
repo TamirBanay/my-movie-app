@@ -1,9 +1,29 @@
 import MovieCard from "../components/MovieCard";
+import SkeletonCardMoive from "../components/Skeletons/SkeletonCardMoive";
+import React, { useState, useEffect } from "react";
 
 function Movie() {
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div>
-      <MovieCard />
+      <div>
+        {showSkeleton ? (
+          <div>
+            <SkeletonCardMoive />
+          </div>
+        ) : (
+          <MovieCard />
+        )}
+      </div>
     </div>
   );
 }

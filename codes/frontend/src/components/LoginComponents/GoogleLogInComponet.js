@@ -4,7 +4,7 @@ import {
   _currentUserId,
   _user,
   _isDark,
-} from "../services/atom";
+} from "../../services/atom";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 

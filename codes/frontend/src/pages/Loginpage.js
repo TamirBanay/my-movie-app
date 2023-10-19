@@ -20,8 +20,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import GoogleLogInComponet from "../components/GoogleLogInComponet";
-import FaceBookLogInComponent from "../components/FaceBookLogInComponent";
+import GoogleLogInComponet from "../components/LoginComponents/GoogleLogInComponet";
+import FaceBookLogInComponent from "../components/LoginComponents/FaceBookLogInComponent";
 
 function Copyright(props) {
   return (
@@ -56,7 +56,7 @@ function Login(props) {
   useEffect(() => {
     setUserIsLoggedIn(false);
     setIsDark("light");
-  }, [  ]);
+  }, []);
 
   const handleLogin = async () => {
     const url = "http://localhost:8000/api/login/";
