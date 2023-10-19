@@ -88,86 +88,92 @@ export default function GradientCover(props) {
   }, [isDark]);
 
   const handleIsLiked = (movieId) => {
-    const isAlreadyFavorite = favoriteMovies.some(
-      (favoriteMovie) => favoriteMovie.tmdb_movie_id === movieId
-    );
+    if (userIsLoggedIn) {
+      const isAlreadyFavorite = favoriteMovies.some(
+        (favoriteMovie) => favoriteMovie.tmdb_movie_id === movieId
+      );
 
-    const newIsLiked = !isLiked[movieId];
-    setIsLiked((prevState) => ({
-      ...prevState,
-      [movieId]: newIsLiked,
-    }));
+      const newIsLiked = !isLiked[movieId];
+      setIsLiked((prevState) => ({
+        ...prevState,
+        [movieId]: newIsLiked,
+      }));
 
-    if (newIsLiked) {
-      if (isAlreadyFavorite) {
-        return;
-      }
-      fetch("http://localhost:8000/add_favorite/", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-        },
-        body: JSON.stringify({
-          tmdb_movie_id: movieId,
-          user: currentUserId, // Use the state variable
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          setShowAlertSuccessAddMovie(true);
-          setTimeout(() => {
-            setShowAlertSuccessAddMovie(false);
-          }, 3000);
-          setFavoriteMovies((prevState) => [
-            ...prevState,
-            { tmdb_movie_id: movieId }, // Assuming the data structure is like this
-          ]);
-        });
-    } else {
-      if (!isAlreadyFavorite) {
-        console.log("Movie is not in favorites to remove");
-        return;
-      }
-      const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
-      fetch(url, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            setShowAlertDeleteMovie(true);
-            setTimeout(() => {
-              setShowAlertDeleteMovie(false);
-            }, 3000);
-
-            setFavoriteMovies((prevState) =>
-              prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
-            );
-          } else {
-            console.error("Failed to remove movie");
-          }
+      if (newIsLiked) {
+        if (isAlreadyFavorite) {
+          return;
+        }
+        fetch("http://localhost:8000/add_favorite/", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
+          body: JSON.stringify({
+            tmdb_movie_id: movieId,
+            user: currentUserId, // Use the state variable
+          }),
         })
-        .catch((error) => console.error("Error:", error));
+          .then((response) => response.json())
+          .then((response) => {
+            setShowAlertSuccessAddMovie(true);
+            setTimeout(() => {
+              setShowAlertSuccessAddMovie(false);
+            }, 3000);
+            setFavoriteMovies((prevState) => [
+              ...prevState,
+              { tmdb_movie_id: movieId }, // Assuming the data structure is like this
+            ]);
+          });
+      } else {
+        if (!isAlreadyFavorite) {
+          console.log("Movie is not in favorites to remove");
+          return;
+        }
+        const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
+        fetch(url, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              setShowAlertDeleteMovie(true);
+              setTimeout(() => {
+                setShowAlertDeleteMovie(false);
+              }, 3000);
+
+              setFavoriteMovies((prevState) =>
+                prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
+              );
+            } else {
+              console.error("Failed to remove movie");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    } else {
+      navigate("/login");
     }
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/user_detail/${UserID}/`)
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
-        setCurrentUserId(UserID);
-        setUserIsLoggedIn(true);
-      })
-      .catch((error) =>
-        console.error("There was a problem with the fetch:", error)
-      );
+    if (userIsLoggedIn) {
+      fetch(`http://localhost:8000/api/user_detail/${UserID}/`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUser(data);
+          setCurrentUserId(UserID);
+          setUserIsLoggedIn(true);
+        })
+        .catch((error) =>
+          console.error("There was a problem with the fetch:", error)
+        );
+    }
   }, []);
 
   const handleOpenMovie = (movieID) => {
@@ -190,7 +196,7 @@ export default function GradientCover(props) {
   };
 
   useEffect(() => {
-    fetchFavoriteMovies(UserID);
+    if (userIsLoggedIn) fetchFavoriteMovies(UserID);
   }, []);
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
@@ -244,6 +250,7 @@ export default function GradientCover(props) {
                   {movie.title}
                 </Typography>
               </Link>
+              {/* {userIsLoggedIn ? ( */}
               <Typography
                 startDecorator={
                   <Favorite
@@ -266,6 +273,7 @@ export default function GradientCover(props) {
                   ? "Remove from list"
                   : "Add from favorites"}
               </Typography>
+              {/* ) : ( "" )} */}
             </CardContent>
             <IconButton
               sx={{

@@ -56,7 +56,7 @@ function Login(props) {
   useEffect(() => {
     setUserIsLoggedIn(false);
     setIsDark("light");
-  }, [userIsLoggedIn, isDark]);
+  }, [isDark]);
 
   const handleLogin = async () => {
     const url = "http://localhost:8000/api/login/";

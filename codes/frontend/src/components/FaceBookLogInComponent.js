@@ -44,6 +44,7 @@ function FaceBookLogInComponent() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
       } else {
         const userData = await response.json();
         console.log("Signup successful", userData);

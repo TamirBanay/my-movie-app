@@ -7,6 +7,7 @@ import {
   Route,
   useParams,
   HashRouter,
+  Navigate,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -42,7 +43,7 @@ function App(props) {
   const [user, setUser] = useRecoilState(_user);
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [selectType, setSelectType] = useRecoilState(_selectType);
-
+  console.log(userIsLoggedIn);
   const fetchUserData = () => {
     if (currentUserId) {
       fetch(`http://localhost:8000/api/user_detail/${userId}/`)
@@ -100,6 +101,7 @@ function App(props) {
         <CheckToken />
         <Navbar />
         <Routes>
+          <Route path="/" element={<Navigate to="/null" />} />
           <Route path="/:currentUserId" element={<Home />} />
           <Route path="/movie/:movieId" element={<Movie />} />
           <Route path="/login" element={<Login />} />

@@ -18,7 +18,7 @@ export const _movieId = atom({
 });
 export const _userIsLoggedIn = atom({
   key: "_userIsLoggedIn",
-  default: localStorage.getItem("isLoggedIn"),
+  default: false,
 });
 
 export const _currentUserId = atom({
