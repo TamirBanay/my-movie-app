@@ -103,6 +103,7 @@ function Trailer() {
         )}
       </div>
       <div style={{ textAlign: "center" }}>
+        <p />
         <Button
           onClick={() => navigate(-1)}
           variant="solid"
