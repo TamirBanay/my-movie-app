@@ -48,7 +48,6 @@ function FaceBookLogInComponent() {
         const userData = await response.json();
         console.log("Signup successful", userData);
         setUser(userData);
-        console.log(user);
         handleLoginFaceBook(
           faceBookUserData.username,
           faceBookUserData.password,

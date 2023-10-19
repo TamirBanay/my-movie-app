@@ -28,7 +28,9 @@ import {
   _currentUserId,
   _isDark,
   _favoritMovies,
+  _user,
 } from "../services/atom";
+import { googleLogout } from "@react-oauth/google";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -51,6 +53,8 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const [currentUserId, setCurrentUserId] = useRecoilState(_currentUserId);
+  const [user, setUser] = useRecoilState(_user);
+
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -93,6 +97,8 @@ function ResponsiveAppBar() {
       // Logout failed
       console.error("Logout failed:", response.statusText);
     }
+
+    if (user.isGoogleUser) googleLogout();
   }
 
   const handleProfile = () => {
