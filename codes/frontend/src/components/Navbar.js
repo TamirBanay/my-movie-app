@@ -86,15 +86,14 @@ function ResponsiveAppBar() {
       localStorage.removeItem("token");
       localStorage.removeItem("userID");
       localStorage.removeItem("userData");
+      localStorage.removeItem("favoriteMovies");
       localStorage.setItem("isLoggedIn", false);
       setUserIsLoggedIn(false);
       setIsDark("light");
       setAnchorElUser(false);
       setCurrentUserId(null);
       navigate("/login");
-      // Clear the token from local storage
     } else {
-      // Logout failed
       console.error("Logout failed:", response.statusText);
     }
 
