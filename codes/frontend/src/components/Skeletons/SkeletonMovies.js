@@ -24,12 +24,6 @@ function Media(props) {
         width={600}
         sx={{ m: "auto", bgcolor: isDark === "dark" ? "#4F4A45" : "" }}
       />
-      <Skeleton
-        animation="wave"
-        height={70}
-        width={700}
-        sx={{ m: "auto", bgcolor: isDark === "dark" ? "#4F4A45" : "" }}
-      />
 
       <Grid
         container

@@ -19,9 +19,10 @@ export default function SelectBasic() {
       // color="neutral"
       sx={{
         // alignSelf: "center",
-        width: "40%",
-        m: "auto",
-        mb: 2,
+        width: "100%",
+        // m: "auto",
+        // mb: 2,
+        maxWidth: "200px",
       }}
     >
       <Option value="now_playing">Now Playing</Option>

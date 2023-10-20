@@ -53,28 +53,30 @@ export default function GradientCover(props) {
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
     height: "20px",
-    marginLeft: "10%",
+    // marginLeft: "10%",
     padding: "10px",
     border: "2px solid #4a90e2",
     outline: "none",
     fontSize: "16px",
     color: "#333",
+    maxWidth: "400px",
+    width: "100%",
   });
   useEffect(() => {
     const updateStyle = () => {
       if (window.innerWidth >= 768) {
         setInputStyle((prevStyle) => ({
           ...prevStyle,
-          width: "50%",
-          marginLeft: "25%",
+          // width: "50%",
+          // marginLeft: "25%",
           backgroundColor: isDark === "dark" ? "#212121" : "#fff",
           color: isDark === "dark" ? "#fff" : "",
         }));
       } else {
         setInputStyle((prevStyle) => ({
           ...prevStyle,
-          width: "80%",
-          marginLeft: "10%",
+          width: "100%",
+          // marginLeft: "10%",
           backgroundColor: isDark == "dark" ? "#212121" : "#fff",
           color: isDark === "dark" ? "#fff" : "",
         }));
@@ -208,14 +210,26 @@ export default function GradientCover(props) {
   return (
     <div>
       <p />
-      <SelectCategory />
-      <input
-        style={inputStyle}
-        type="text"
-        placeholder=" Search Movie"
-        value={filterLetter}
-        onChange={(e) => setFilterLetter(e.target.value)}
-      />
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid item >
+          <SelectCategory />
+        </Grid>
+
+        <Grid item>
+          <input
+            style={inputStyle}
+            type="text"
+            placeholder=" Search Movie"
+            value={filterLetter}
+            onChange={(e) => setFilterLetter(e.target.value)}
+          />
+        </Grid>
+      </Grid>
       <p />
       <Grid
         container
