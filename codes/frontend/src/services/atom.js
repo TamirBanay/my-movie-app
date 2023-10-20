@@ -18,7 +18,7 @@ export const _movieId = atom({
 });
 export const _userIsLoggedIn = atom({
   key: "_userIsLoggedIn",
-  default: false,
+  default: localStorage.getItem("isLoggedIn") || false,
 });
 
 export const _currentUserId = atom({
@@ -44,7 +44,7 @@ export const _isLiked = atom({
 });
 export const _isDark = atom({
   key: "_isDark",
-  default: "light" || localStorage.getItem("theme"),
+  default: localStorage.getItem("theme") || "light",
 });
 export const _selectType = atom({
   key: "_selectType",

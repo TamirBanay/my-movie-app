@@ -43,6 +43,8 @@ function App(props) {
   const [user, setUser] = useRecoilState(_user);
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [selectType, setSelectType] = useRecoilState(_selectType);
+  const UserID = localStorage.getItem("userID");
+
   const fetchUserData = () => {
     if (currentUserId) {
       fetch(`http://localhost:8000/api/user_detail/${userId}/`)
@@ -54,6 +56,7 @@ function App(props) {
             setUserIsLoggedIn(false);
           } else {
             setUserIsLoggedIn(true);
+            setCurrentUserId(UserID);
           }
         })
         .catch((error) =>

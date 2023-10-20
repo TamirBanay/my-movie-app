@@ -43,10 +43,8 @@ function Login(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [succesSignUp, setSuccesSignUp] = useState(false);
-
   const [user, setUser] = useRecoilState(_user);
   const [isDark, setIsDark] = useRecoilState(_isDark);
-
   const [error, setError] = useState(null);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
   const navigate = useNavigate();

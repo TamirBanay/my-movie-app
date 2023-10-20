@@ -36,6 +36,8 @@ function FavoritMovies() {
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
   const userIsLoggedIn = localStorage.getItem("isLoggedIn");
+  const storedFavoriteMovies = localStorage.getItem("favoriteMovies");
+  console.log(storedFavoriteMovies);
   const imgPath = "https://image.tmdb.org/t/p/original/";
   const fetchMovieData = async () => {
     const moviesData = await Promise.all(
@@ -60,9 +62,8 @@ function FavoritMovies() {
   useEffect(() => {
     if (favoriteMovies.length > 0) {
       fetchMovieData();
+      setCurrentUserId(UserID);
       localStorage.setItem("favoriteMovies", JSON.stringify(favoriteMovies));
-    } else {
-      localStorage.removeItem("favoriteMovies");
     }
   }, [favoriteMovies]);
   const initializeFavoritesFromLocalStorage = () => {
@@ -74,7 +75,6 @@ function FavoritMovies() {
   useEffect(() => {
     initializeFavoritesFromLocalStorage();
   }, []);
-
   const removeFromFavorit = (movieId) => {
     const url = `http://localhost:8000/remove_favorite/${movieId}/${UserID}/`;
     fetch(url, {
@@ -158,7 +158,6 @@ function FavoritMovies() {
                     <Favorite
                       onClick={() => removeFromFavorit(movie.id)}
                       color="warning"
-                      // onClick={() => handleIsLiked(movie.id, movie.title)}
                     />
                   }
                   textColor="neutral.300"
