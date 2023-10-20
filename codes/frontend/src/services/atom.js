@@ -50,3 +50,7 @@ export const _selectType = atom({
   key: "_selectType",
   default: "now_playing",
 });
+export const _recommendadMovies = atom({
+  key: "_recommendadMovies",
+  default: [],
+});

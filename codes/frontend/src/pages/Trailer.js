@@ -14,15 +14,14 @@ import {
   _isDark,
 } from "../services/atom";
 import Skeleton from "@mui/material/Skeleton";
-
+import RecommendationsForYou from "../components/RecommendationsForYou";
 import { useRecoilState } from "recoil";
-function Trailer() {
+function Trailer(props) {
   const [videoKey, setVideoKey] = useState(null);
   const { movieId } = useParams();
   const [movie, setMovie] = useState({});
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [showSkeleton, setShowSkeleton] = useState(true); // New state for Skeleton timeout
-
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +48,6 @@ function Trailer() {
         );
         const data = await response.json();
 
-        // Extract the YouTube video key from the API response
         const youtubeVideo = data.results.find(
           (video) => video.site === "YouTube"
         );
@@ -138,6 +136,7 @@ function Trailer() {
           Back
         </Button>
       </div>
+      <RecommendationsForYou movieId={movieId} />
     </div>
   );
 }

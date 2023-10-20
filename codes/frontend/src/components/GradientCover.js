@@ -67,8 +67,7 @@ export default function GradientCover(props) {
       if (window.innerWidth >= 768) {
         setInputStyle((prevStyle) => ({
           ...prevStyle,
-          // width: "50%",
-          // marginLeft: "25%",
+
           backgroundColor: isDark === "dark" ? "#212121" : "#fff",
           color: isDark === "dark" ? "#fff" : "",
         }));
@@ -215,12 +214,13 @@ export default function GradientCover(props) {
         direction="row"
         justifyContent="center"
         alignItems="center"
+        spacing={0.2}
       >
-        <Grid item >
+        <Grid>
           <SelectCategory />
         </Grid>
 
-        <Grid item>
+        <Grid>
           <input
             style={inputStyle}
             type="text"

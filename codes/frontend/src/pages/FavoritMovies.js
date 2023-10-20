@@ -7,6 +7,7 @@ import IconButton from "@mui/joy/IconButton";
 import Grid from "@mui/joy/Grid";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useHistory } from "react";
+
 import {
   _moviesList,
   _currentPage,
