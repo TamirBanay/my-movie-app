@@ -63,101 +63,128 @@ function RecommendationsForYou(props) {
   return (
     <div>
       <p />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center", // Centers content horizontally
-        }}
-      >
-        <Typography
-          level="title-lg"
-          textColor={isDark === "dark" ? "#fff" : ""}
-        >
-          Similar Movies
-        </Typography>
-      </Box>
 
-      <Box
-        component="div"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <IconButton
-          onClick={handleScrollRight}
-          sx={{
-            position: "absolute",
-            right: 5,
-            zIndex: 1,
-            "&:hover": {
-              backgroundColor: isDark === "dark" ? "#000" : "",
-            },
-          }}
-        >
-          <ArrowForwardIosIcon sx={{ color: isDark == "dark" ? "#fff" : "" }} />
-        </IconButton>
-        <IconButton
-          onClick={handleScrollLeft}
-          sx={{
-            position: "absolute",
-            left: 5,
-            zIndex: 1,
-            "&:hover": {
-              backgroundColor: isDark === "dark" ? "#000" : "", // Change the background color of the IconButton to red on hover
-            },
-          }}
-        >
-          <ArrowBackIosIcon sx={{ color: isDark === "dark" ? "#fff" : "" }} />
-        </IconButton>
-        <Box
-          ref={scrollContainerRef}
-          component="ul"
-          sx={{
-            width: "90%",
-            height: "250px",
-            justifyContent: "center",
-            display: "flex",
-            gap: 0.5,
-            overflowX: "scroll",
-            listStyleType: "none",
-            scrollbarWidth: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-          }}
-        >
-          {recommendadMovies.map((movie) => (
-            <Card component="li" sx={{ flexGrow: 0 }} key={movie.id}>
-              {" "}
-              <CardCover>
-                <img src={`${imgPath + movie.poster_path}`} />
-              </CardCover>
-              <CardCover
-                sx={{
-                  background:
-                    "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
-                }}
+      {recommendadMovies.length > 0 ? (
+        <div>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center", // Centers content horizontally
+            }}
+          >
+            <Typography
+              level="title-lg"
+              textColor={isDark === "dark" ? "#fff" : ""}
+            >
+              Our Recommendatios{" "}
+            </Typography>
+          </Box>
+
+          <Box
+            component="div"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <IconButton
+              onClick={handleScrollRight}
+              sx={{
+                position: "absolute",
+                right: 5,
+                zIndex: 1,
+                "&:hover": {
+                  backgroundColor: isDark === "dark" ? "#000" : "",
+                },
+              }}
+            >
+              <ArrowForwardIosIcon
+                sx={{ color: isDark == "dark" ? "#fff" : "" }}
               />
-              <CardContent>
-                <Typography level="body-md" fontWeight="lg" textColor="#fff">
-                  {movie.title}
-                </Typography>
-              </CardContent>
-              <IconButton
-                sx={{
-                  bgcolor: "#D0E7D2",
-                }}
-                onClick={() => handleRoutToTrailer(movie.id)}
-              >
-                <PlayArrowOutlinedIcon /> Trailer
-              </IconButton>
-            </Card>
-          ))}
+            </IconButton>
+            <IconButton
+              onClick={handleScrollLeft}
+              sx={{
+                position: "absolute",
+                left: 5,
+                zIndex: 1,
+                "&:hover": {
+                  backgroundColor: isDark === "dark" ? "#000" : "", // Change the background color of the IconButton to red on hover
+                },
+              }}
+            >
+              <ArrowBackIosIcon
+                sx={{ color: isDark === "dark" ? "#fff" : "" }}
+              />
+            </IconButton>
+            <Box
+              ref={scrollContainerRef}
+              component="ul"
+              sx={{
+                width: "90%",
+                height: "250px",
+                justifyContent: "center",
+                display: "flex",
+                gap: 0.5,
+                overflowX: "scroll",
+                listStyleType: "none",
+                scrollbarWidth: "none",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
+              {recommendadMovies.map((movie) => (
+                <Card component="li" sx={{ flexGrow: 0 }} key={movie.id}>
+                  {" "}
+                  <CardCover>
+                    <img src={`${imgPath + movie.poster_path}`} />
+                  </CardCover>
+                  <CardCover
+                    sx={{
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
+                    }}
+                  />
+                  <CardContent>
+                    <Typography
+                      level="body-md"
+                      fontWeight="lg"
+                      textColor="#fff"
+                    >
+                      {movie.title}
+                    </Typography>
+                  </CardContent>
+                  <IconButton
+                    sx={{
+                      bgcolor: "#D0E7D2",
+                    }}
+                    onClick={() => handleRoutToTrailer(movie.id)}
+                  >
+                    <PlayArrowOutlinedIcon /> Trailer
+                  </IconButton>
+                </Card>
+              ))}
+            </Box>
+          </Box>
+        </div>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center", // Centers content horizontally
+          }}
+        >
+          <Typography
+            level="title-lg"
+            textColor={isDark === "dark" ? "#fff" : ""}
+          >
+            Sorry, We don't have any recommend movie
+          </Typography>
         </Box>
-      </Box>
+      )}
     </div>
   );
 }
