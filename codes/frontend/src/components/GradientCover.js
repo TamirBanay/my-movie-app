@@ -214,7 +214,7 @@ export default function GradientCover(props) {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        spacing={0.2}
+        spacing={0.1}
       >
         <Grid>
           <SelectCategory />
