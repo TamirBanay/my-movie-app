@@ -20,9 +20,9 @@ export default function TextRating(props) {
   return (
     <Box
       sx={{
-        width: 200,
-        display: "flex",
-        alignItems: "center",
+        // width: 200,
+        display: "flex-end",
+        alignItems: "right",
       }}
     >
       <Rating

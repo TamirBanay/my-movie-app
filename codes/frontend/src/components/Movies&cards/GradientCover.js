@@ -24,10 +24,10 @@ import {
   _favoritMovies,
   _isLiked,
   _isDark,
-} from "../services/atom";
+} from "../../services/atom";
 import { useRecoilState } from "recoil";
 import Grid from "@mui/joy/Grid";
-import DotsMobileStepper from "./DotsMobileStepper";
+import DotsMobileStepper from "../DotsMobileStepper";
 import MovieCard from "./MovieCard";
 import { Link, useParams } from "react-router-dom";
 import AlertNotifications from "./AlertNotifications";

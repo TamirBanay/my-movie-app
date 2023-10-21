@@ -13,8 +13,12 @@ import {
   _isLiked,
   _isDark,
 } from "../services/atom";
+import Divider from "@mui/joy/Divider";
+import Typography from "@mui/joy/Typography";
+import RatingStars from "../components/Movies&cards/RatingStars";
+
 import Skeleton from "@mui/material/Skeleton";
-import RecommendationsForYou from "../components/RecommendationsForYou";
+import RecommendationsForYou from "../components/Trailers/RecommendationsForYou";
 import { useRecoilState } from "recoil";
 function Trailer(props) {
   const [videoKey, setVideoKey] = useState(null);
@@ -23,6 +27,7 @@ function Trailer(props) {
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [showSkeleton, setShowSkeleton] = useState(true); // New state for Skeleton timeout
   let navigate = useNavigate();
+  const imgPath = "https://image.tmdb.org/t/p/original/";
 
   useEffect(() => {
     // Logic for hiding the skeleton after 2 seconds
@@ -81,7 +86,6 @@ function Trailer(props) {
   useEffect(() => {
     fetchMovieData();
   }, [movieId]);
-
   const centerContentStyle = {
     display: "flex",
     justifyContent: "center",
@@ -90,19 +94,52 @@ function Trailer(props) {
 
   return (
     <div>
-      <h1
+      <div
         style={{
-          textAlign: "center",
-          color: isDark == "dark" ? "#D0E7D2" : "#191717",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {movie.title}
-      </h1>
-      <div style={centerContentStyle}>
+        <h1
+          style={{
+            color: isDark == "dark" ? "#D0E7D2" : "#191717",
+            display: "flex",
+            justifyContent: "space-between", // This spreads out the child items
+            alignItems: "center", // Vertically centers the child items
+            width: "55%",
+          }}
+        >
+          {movie.title}
+          <RatingStars rating={movie.vote_average} />
+        </h1>
+      </div>
+
+      {/* Flex container */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* Image */}
+        <img
+          src={`${imgPath + movie.poster_path}`}
+          alt={movie.title}
+          style={{
+            width: "15%",
+            objectFit: "cover",
+            marginRight: "0.2%",
+            height: "415px",
+          }}
+        />
+
+        {/* Video */}
         {videoKey ? (
           <iframe
-            width="60%"
-            height="615"
+            width="40%" // Adjusted width to 65% to take into account the image and potential margins
+            height="415"
             src={`https://www.youtube.com/embed/${videoKey}`}
             title="YouTube video player"
             frameBorder="0"
@@ -122,7 +159,7 @@ function Trailer(props) {
       </div>
       <div style={{ textAlign: "center" }}>
         <p />
-        <Button
+        {/* <Button
           onClick={() => navigate(-1)}
           variant="solid"
           size="lg"
@@ -134,7 +171,29 @@ function Trailer(props) {
           }}
         >
           Back
-        </Button>
+        </Button> */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            fontSize="lg"
+            fontWeight="sm"
+            sx={{
+              display: "flex",
+              width: "55%",
+              textAlign: "left",
+              color: isDark == "dark" ? "#D0E7D2" : "#191717",
+            }}
+          >
+            {movie.overview}
+          </Typography>
+        </div>
+        <p />
+        <Divider orientation="horizontal" />
       </div>
       <RecommendationsForYou movieId={movieId} />
     </div>

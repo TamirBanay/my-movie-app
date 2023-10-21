@@ -3,7 +3,7 @@ import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import { useRecoilState } from "recoil";
 
-import { _selectType } from "../services/atom";
+import { _selectType } from "../../services/atom";
 
 export default function SelectBasic() {
   const [selectType, setSelectType] = useRecoilState(_selectType);
