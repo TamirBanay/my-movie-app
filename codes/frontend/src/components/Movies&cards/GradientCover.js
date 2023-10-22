@@ -46,9 +46,12 @@ export default function GradientCover(props) {
   const [filterLetter, setFilterLetter] = useState("");
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const navigate = useNavigate();
+  const [favorites, setFavorites] = useState([]);
+  const [animatedMovieId, setAnimatedMovieId] = useState(null);
 
   const [showAlertSuccessAddMovie, setShowAlertSuccessAddMovie] =
     useState(false);
+
   const [showAlertDeleteMovie, setShowAlertDeleteMovie] = useState(false);
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
@@ -62,6 +65,30 @@ export default function GradientCover(props) {
     maxWidth: "400px",
     width: "100%",
   });
+
+  const addToFavorites = (movie) => {
+    setFavorites([...favorites, movie]);
+  };
+
+  const normalStyle = {
+    transform: "scale(1)",
+    transition: "transform 0.5s",
+  };
+
+  const blownUpStyle = {
+    transform: "scale(1.1)",
+    transition: "transform 0.5s",
+  };
+  const handleAddToFavorites = (movie) => {
+    setAnimatedMovieId(movie.id); // Trigger the animation
+    addToFavorites(movie);
+
+    // Reset after the duration of your animation:
+    setTimeout(() => {
+      setAnimatedMovieId(null);
+    }, 500);
+  };
+
   useEffect(() => {
     const updateStyle = () => {
       if (window.innerWidth >= 768) {
@@ -237,7 +264,12 @@ export default function GradientCover(props) {
         sx={{ flexGrow: 1, justifyContent: "center" }}
       >
         {filteredMovies.map((movie) => (
-          <Card sx={{ minHeight: "280px", width: 180, m: 1 }} key={movie.id}>
+          <Card
+            sx={{ minHeight: "280px", width: 180, m: 1 }}
+            key={movie.id}
+            onClick={() => handleAddToFavorites(movie)}
+            style={animatedMovieId === movie.id ? blownUpStyle : normalStyle}
+          >
             <CardCover>
               <img src={`${imgPath + movie.poster_path}`} />
             </CardCover>
