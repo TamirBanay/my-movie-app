@@ -39,7 +39,6 @@ function Trailer(props) {
   const [images, setImages] = useRecoilState(_imagesForCurrentMoive);
   const [reviews, setReviews] = useRecoilState(__reviewsForCurrentMoive);
   const [reviewsOn, setreviewsOn] = useRecoilState(_reviewsOpen);
-  console.log(reviews);
   const handleReviewsOn = () => {
     setreviewsOn(!reviewsOn);
   };
