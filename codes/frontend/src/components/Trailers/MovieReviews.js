@@ -46,23 +46,6 @@ function MovieReviews(props) {
     alignItems: "center",
     overflowY: "auto",
     maxHeight: "80vh",
-
-    // Custom scrollbar styles:
-    scrollbarWidth: "thin",
-    scrollbarColor: "rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.5)",
-    "&::-webkit-scrollbar": {
-      width: "8px",
-    },
-    "&::-webkit-scrollbar-track": {
-      background: "rgba(0, 0, 0, 0.5)",
-    },
-    "&::-webkit-scrollbar-thumb": {
-      background: "rgba(255, 255, 255, 0.5)",
-      borderRadius: "4px",
-    },
-    "&::-webkit-scrollbar-thumb:hover": {
-      background: "rgba(255, 255, 255, 0.8)",
-    },
   };
 
   return (
