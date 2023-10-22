@@ -1,4 +1,4 @@
-import MovieCard from "../components/MovieCard";
+import MovieCard from "../components/Movies&cards/MovieCard";
 import SkeletonCardMoive from "../components/Skeletons/SkeletonCardMoive";
 import React, { useState, useEffect } from "react";
 

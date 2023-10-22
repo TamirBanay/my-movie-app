@@ -8,7 +8,11 @@ import { useNavigate } from "react-router-dom";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import IconButton from "@mui/joy/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { _isDark, _recommendadMovies, _currentUserId } from "../services/atom";
+import {
+  _isDark,
+  _recommendadMovies,
+  _currentUserId,
+} from "../../services/atom";
 import { useRecoilState } from "recoil";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 function RecommendationsForYou(props) {

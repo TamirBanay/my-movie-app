@@ -14,7 +14,7 @@ import {
   _movieId,
   _currentUserId,
   _isDark,
-} from "../services/atom";
+} from "../../services/atom";
 
 export default function BasicCard() {
   const { movieId } = useParams();

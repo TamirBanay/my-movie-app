@@ -54,3 +54,19 @@ export const _recommendadMovies = atom({
   key: "_recommendadMovies",
   default: [],
 });
+export const _imagesOn = atom({
+  key: " _imagesOn",
+  default: false,
+});
+export const _imagesForCurrentMoive = atom({
+  key: " _imagesForCurrentMoive",
+  default: [],
+});
+export const _reviewsOpen = atom({
+  key: " _reviewsOpen",
+  default: false,
+});
+export const __reviewsForCurrentMoive = atom({
+  key: " __reviewsForCurrentMoive",
+  default: [],
+});

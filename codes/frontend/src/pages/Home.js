@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import GradientCover from "../components/GradientCover";
+import GradientCover from "../components/Movies&cards/GradientCover";
 import SkeletonMovies from "../components/Skeletons/SkeletonMovies";
 
 function Home() {
