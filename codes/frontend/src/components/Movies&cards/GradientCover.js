@@ -24,8 +24,12 @@ import {
   _favoritMovies,
   _isLiked,
   _isDark,
+  _showAlertDeleteMovie,
+  _showAlertSuccessAddMovie,
 } from "../../services/atom";
 import { useRecoilState } from "recoil";
+import AddToFavoritList from "../Trailers/AddToFavoritList";
+
 import Grid from "@mui/joy/Grid";
 import DotsMobileStepper from "../DotsMobileStepper";
 import MovieCard from "./MovieCard";
@@ -50,9 +54,11 @@ export default function GradientCover(props) {
   const [animatedMovieId, setAnimatedMovieId] = useState(null);
 
   const [showAlertSuccessAddMovie, setShowAlertSuccessAddMovie] =
-    useState(false);
+    useRecoilState(_showAlertSuccessAddMovie);
 
-  const [showAlertDeleteMovie, setShowAlertDeleteMovie] = useState(false);
+  const [showAlertDeleteMovie, setShowAlertDeleteMovie] = useRecoilState(
+    _showAlertDeleteMovie
+  );
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
     height: "20px",
@@ -114,80 +120,6 @@ export default function GradientCover(props) {
 
     return () => window.removeEventListener("resize", updateStyle);
   }, [isDark]);
-
-  const handleIsLiked = (movieId) => {
-    if (userIsLoggedIn) {
-      const isAlreadyFavorite = favoriteMovies.some(
-        (favoriteMovie) => favoriteMovie.tmdb_movie_id === movieId
-      );
-
-      const newIsLiked = !isLiked[movieId];
-      setIsLiked((prevState) => ({
-        ...prevState,
-        [movieId]: newIsLiked,
-      }));
-
-      if (newIsLiked) {
-        if (isAlreadyFavorite) {
-          return;
-        }
-        fetch("http://localhost:8000/add_favorite/", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-          },
-          body: JSON.stringify({
-            tmdb_movie_id: movieId,
-            user: currentUserId, // Use the state variable
-          }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            setShowAlertSuccessAddMovie(true);
-            setTimeout(() => {
-              setShowAlertSuccessAddMovie(false);
-            }, 3000);
-            setFavoriteMovies((prevState) => [
-              ...prevState,
-              { tmdb_movie_id: movieId }, // Assuming the data structure is like this
-            ]);
-          });
-      } else {
-        if (!isAlreadyFavorite) {
-          console.log("Movie is not in favorites to remove");
-          return;
-        }
-        const url = `http://localhost:8000/remove_favorite/${movieId}/${currentUserId}/`;
-        fetch(url, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              setShowAlertDeleteMovie(true);
-              setTimeout(() => {
-                setShowAlertDeleteMovie(false);
-              }, 3000);
-
-              setFavoriteMovies((prevState) =>
-                prevState.filter((movie) => movie.tmdb_movie_id !== movieId)
-              );
-            } else {
-              console.error("Failed to remove movie");
-            }
-          })
-          .catch((error) => console.error("Error:", error));
-      }
-    } else {
-      navigate("/login");
-    }
-  };
 
   useEffect(() => {
     if (userIsLoggedIn) {
@@ -296,29 +228,7 @@ export default function GradientCover(props) {
                   {movie.title}
                 </Typography>
               </Link>
-
-              <Typography
-                startDecorator={
-                  <Favorite
-                    onClick={() => handleIsLiked(movie.id, movie.title)}
-                    color={
-                      favoriteMovies.some(
-                        (favoriteMovie) =>
-                          favoriteMovie.tmdb_movie_id === movie.id
-                      )
-                        ? "warning"
-                        : ""
-                    }
-                  />
-                }
-                textColor="neutral.300"
-              >
-                {favoriteMovies.some(
-                  (favoriteMovie) => favoriteMovie.tmdb_movie_id === movie.id
-                )
-                  ? "Remove from list"
-                  : "Add from favorites"}
-              </Typography>
+              <AddToFavoritList movieTitle={movie.title} movieId={movie.id} />
             </CardContent>
             <IconButton
               sx={{
@@ -332,14 +242,14 @@ export default function GradientCover(props) {
         ))}
       </Grid>
       <p />
+
+      {movieIsOpen ? "" : <DotsMobileStepper />}
       {showAlertSuccessAddMovie && (
         <AlertNotifications text={"Movie add to list Successfully"} />
       )}
       {showAlertDeleteMovie && (
         <AlertNotifications text={"Movie deleted from the list Successfully"} />
       )}
-
-      {movieIsOpen ? "" : <DotsMobileStepper />}
     </div>
   );
 }

@@ -70,3 +70,12 @@ export const __reviewsForCurrentMoive = atom({
   key: " __reviewsForCurrentMoive",
   default: [],
 });
+export const _showAlertDeleteMovie = atom({
+  key: " _showAlertDeleteMovie",
+  default: false,
+});
+
+export const _showAlertSuccessAddMovie = atom({
+  key: " _showAlertSuccessAddMovie",
+  default: false,
+});

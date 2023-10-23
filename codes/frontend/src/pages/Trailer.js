@@ -29,6 +29,7 @@ import FilterIcon from "@mui/icons-material/Filter";
 import { IconButton } from "@mui/material";
 import MovieReviews from "../components/Trailers/MovieReviews";
 import ReviewsIcon from "@mui/icons-material/Reviews";
+import AddToFavoritList from "../components/Trailers/AddToFavoritList";
 function Trailer(props) {
   const [videoKey, setVideoKey] = useState(null);
   const { movieId } = useParams();
@@ -173,6 +174,7 @@ function Trailer(props) {
       </div>
 
       {/* Flex container */}
+
       <div
         style={{
           display: "flex",
@@ -180,16 +182,20 @@ function Trailer(props) {
           justifyContent: "center",
         }}
       >
+        {/* <AddToFavoritList movieTitle={movie.title} movieId={movie.id} /> */}
+
         {/* Image */}
         {movie.poster_path && (
           <img
             src={`${imgPath + movie.poster_path}`}
             alt={movie.title}
             style={{
+              // position: "ab",
               width: "15%",
               objectFit: "cover",
               marginRight: "0.2%",
               height: "415px",
+              display: "flex",
             }}
           />
         )}
