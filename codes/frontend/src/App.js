@@ -30,7 +30,7 @@ import CheckToken from "./components/CheckToken";
 import SignUp from "./pages/SignUp";
 import FavoritMovies from "./pages/FavoritMovies";
 import Trailer from "./pages/Trailer";
-
+import Series from "./pages/Series";
 export const ThemeContext = createContext(null);
 
 function App(props) {
@@ -110,6 +110,7 @@ function App(props) {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/:currentUserId/profile" element={<Profile />} />
           <Route path="/:currentUserId/favorits" element={<FavoritMovies />} />
+          <Route path="/:currentUserId/series" element={<Series />} />
           <Route
             path="/:currentUserId/trailer/:movieId"
             element={<Trailer />}

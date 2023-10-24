@@ -79,3 +79,21 @@ export const _showAlertSuccessAddMovie = atom({
   key: " _showAlertSuccessAddMovie",
   default: false,
 });
+
+export const _airingTodaySerisList = atom({
+  key: "_airingTodaySerisList",
+  default: [],
+});
+export const _onTheAirSeries = atom({
+  key: "_onTheAir",
+  default: [],
+});
+export const _popularSeries = atom({
+  key: "_popularSeries",
+  default: [],
+});
+
+export const _topRate = atom({
+  key: "_topRate",
+  default: [],
+});

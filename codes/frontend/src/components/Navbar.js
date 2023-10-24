@@ -197,24 +197,44 @@ function ResponsiveAppBar() {
           >
             MOVIES
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: {
+                xs: "none",
+                md: "flex",
+                width: "50%",
+              },
+            }}
+          >
             {userIsLoggedIn ? (
-              <Button
-                href={`/#/${currentUserId}/favorits`}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+              <div
+                style={{ width: "100%", display: "flex", flexDirection: "row" }}
               >
-                <Badge
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  badgeContent={favoriteMovies.length}
-                  color="secondary"
+                <Button
+                  href={`/#/${currentUserId}/series`}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  MY Favorites
-                </Badge>
-              </Button>
+                  SERIES
+                </Button>
+                <Button
+                  href={`/#/${currentUserId}/favorits`}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  <Badge
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    badgeContent={favoriteMovies.length}
+                    color="secondary"
+                  >
+                    MY Favorites
+                  </Badge>
+                </Button>
+              </div>
             ) : (
               <Button
                 href="/#/login"

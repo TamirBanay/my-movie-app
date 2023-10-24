@@ -26,6 +26,7 @@ from rest_framework_simplejwt import views as jwt_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('members.urls')),  # This includes the members app URLs under the path 'api/'
+    path('api/tv/', include('series_app.urls')),
     path('add_favorite/', AddFavoriteView.as_view(), name='add_favorite'),
     path('remove_favorite/<int:tmdb_movie_id>/<int:user_id>/', RemoveFavoriteView.as_view(), name='remove_favorite'),
     path('favorite_movies/<int:user_id>/', FavoriteMoviesView.as_view(), name='favorite_movies'),

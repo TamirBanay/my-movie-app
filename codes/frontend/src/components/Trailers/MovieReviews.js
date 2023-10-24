@@ -48,6 +48,9 @@ function MovieReviews(props) {
     maxHeight: "80vh",
   };
 
+
+
+  
   return (
     <Modal
       open={reviewsOn}

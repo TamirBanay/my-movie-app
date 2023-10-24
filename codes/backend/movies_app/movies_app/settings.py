@@ -17,11 +17,10 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-20n-d2+d%wbjkn(z02+bor%64cila#ygv84$w0#osme@muvl40'
+TMDB_API_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2MzM3NTJiZjE3MmJlMzNhNTdhY2UyNTAxYjI5MDkyYSIsInN1YiI6IjY1MDE5YWJjNmEyMjI3MDBhYmE5MWFlNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6EhZEXn1Bz9SFSO4_zALQKSY6DRvx_O7-tdzP1J_Ls0"
+
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -57,8 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'members',
     'movies_app',
+    
     'corsheaders',
     'rest_framework',
+    'series_app'
 
 
 
@@ -71,6 +72,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 
 ]
+CORS_ALLOW_ALL_ORIGINS = True
+
 AUTH_USER_MODEL = 'members.CustomUser'
 
 MIDDLEWARE = [
