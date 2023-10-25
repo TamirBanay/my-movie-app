@@ -56,10 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'members',
     'movies_app',
-    
     'corsheaders',
     'rest_framework',
-    'series_app'
 
 
 
