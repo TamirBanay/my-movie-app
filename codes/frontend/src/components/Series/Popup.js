@@ -30,10 +30,10 @@ const Popup = ({ series }) => {
       .then((response) => setSeriesDetails(response))
       .catch((err) => console.error(err));
   };
+
   useEffect(() => {
     fetchSeriesDetails();
   }, [series.id]);
-  // console.log(seriesDetails);
   return (
     <div
       style={{
@@ -47,12 +47,13 @@ const Popup = ({ series }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start", // This pushes content to the top
+        justifyContent: "flex-start",
         overflow: "auto",
       }}
       key={series.id}
     >
       <img
+        loading="lazy"
         style={{
           height: "50%",
           width: "100%",
