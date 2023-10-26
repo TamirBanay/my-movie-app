@@ -27,13 +27,24 @@ const Popup = ({ series }) => {
       options
     )
       .then((response) => response.json())
-      .then((response) => setSeriesDetails(response))
+      .then((response) => {
+        const extractedData = {
+          backdrop_path: response.backdrop_path,
+          name: response.name,
+          adult: response.adult,
+          vote_average: response.vote_average,
+          number_of_seasons: response.number_of_seasons,
+          number_of_episodes: response.number_of_episodes,
+          genres: response.genres,
+        };
+        setSeriesDetails(extractedData);
+      })
       .catch((err) => console.error(err));
   };
+  console.log();
   useEffect(() => {
     fetchSeriesDetails();
   }, [series.id]);
-  // console.log(seriesDetails);
   return (
     <div
       style={{
@@ -47,12 +58,13 @@ const Popup = ({ series }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start", // This pushes content to the top
+        justifyContent: "flex-start",
         overflow: "auto",
       }}
       key={series.id}
     >
       <img
+        loading="lazy"
         style={{
           height: "50%",
           width: "100%",

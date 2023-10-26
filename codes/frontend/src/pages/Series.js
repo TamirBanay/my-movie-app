@@ -18,8 +18,6 @@ function Series() {
     _airingTodaySerisList
   );
 
-  console.log(airingTodaySerisList);
-
   return (
     <div>
       <SeriesCards />
