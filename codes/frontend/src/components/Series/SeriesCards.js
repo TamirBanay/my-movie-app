@@ -10,6 +10,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Popup from "./Popup";
 import IconButton from "@mui/joy/IconButton";
+import { createPortal } from "react-dom";
 
 function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -142,20 +143,24 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                     position: "relative",
                     transition: "all 0.3s",
                     overflow: "visible",
-                    "&:hover": {
-                      position: "relative",
-                      top: 0,
-                      left: 0,
-                      width: "340px",
-                      height: "340px",
-                      zIndex: 10,
-                      transitionDelay: "0.5s",
-                    },
+                    // "&:hover": {
+                    //   position: "relative",
+                    //   top: 0,
+                    //   left: 0,
+                    //   width: "340px",
+                    //   height: "340px",
+                    //   zIndex: 10,
+                    //   transitionDelay: "0.5s",
+                    // },
                   }}
                 >
-                  {showPopup && hoveredSeriesId === series.id && (
-                    <Popup series={series} />
-                  )}
+                  {showPopup &&
+                    hoveredSeriesId === series.id &&
+                    createPortal(
+                      <Popup series={series} />,
+                      document.getElementById("popup-root")
+                    )}
+
                   <CardCover
                     style={{
                       zIndex: 1,
