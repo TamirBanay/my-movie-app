@@ -8,7 +8,7 @@ import Button from "@mui/joy/Button";
 import { useState, useEffect, useRef } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import Popup from "./Popup";
+import Popup from "./PopupSeriesCard";
 import IconButton from "@mui/joy/IconButton";
 import { createPortal } from "react-dom";
 
@@ -43,6 +43,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
       clearTimeout(timeoutRef.current);
     };
   }, []);
+
   return (
     <div key={seriesType}>
       <Typography level="body-lg" fontWeight="lg" textColor="#000">
@@ -126,7 +127,6 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                 <Card
                   onMouseEnter={() => {
                     setHoveredSeriesId(series.id);
-                    // Introducing delay before setting showPopup to true
                     timeoutRef.current = setTimeout(() => {
                       setShowPopup(true);
                     }, 500);
@@ -143,24 +143,8 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                     position: "relative",
                     transition: "all 0.3s",
                     overflow: "visible",
-                    // "&:hover": {
-                    //   position: "relative",
-                    //   top: 0,
-                    //   left: 0,
-                    //   width: "340px",
-                    //   height: "340px",
-                    //   zIndex: 10,
-                    //   transitionDelay: "0.5s",
-                    // },
                   }}
                 >
-                  {showPopup &&
-                    hoveredSeriesId === series.id &&
-                    createPortal(
-                      <Popup series={series} />,
-                      document.getElementById("popup-root")
-                    )}
-
                   <CardCover
                     style={{
                       zIndex: 1,
@@ -169,6 +153,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                   >
                     <img
                       src={`${imgPath + series.backdrop_path}`}
+                      alt={series.name}
                       loading="lazy"
                     />
                   </CardCover>
@@ -183,6 +168,14 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                     </Typography>
                   </CardContent>
                 </Card>
+                <>
+                  {showPopup &&
+                    hoveredSeriesId === series.id &&
+                    createPortal(
+                      <Popup series={series} />,
+                      document.getElementById("popup-root")
+                    )}
+                </>
               </Box>
             ))}
         </Box>
@@ -201,13 +194,27 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
 export default function MediaCover() {
   const imgPath = "https://image.tmdb.org/t/p/original/";
   const [seriesData, setSeriesData] = useState({});
+
+  // Important: Remember to replace 'YOUR_API_KEY_HERE' with your actual API key
+  const API_KEY = "633752bf172be33a57ace2501b29092a";
   const arrOfSeries = ["airing_today", "top_rated", "on_the_air", "popular"];
 
   function fetchData(seriesType) {
-    fetch(`https://api.themoviedb.org/3/tv/${seriesType}?language=en-US&page=1`)
-      .then((response) => response.json())
+    fetch(
+      `https://api.themoviedb.org/3/tv/${seriesType}?language=en-US&page=1&api_key=${API_KEY}`
+    )
       .then((response) => {
-        // Map over the results to pick only the fields you want
+        if (!response.ok) {
+          throw new Error(`API call failed with status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        if (!response || !response.results) {
+          console.error("Unexpected response format:", response);
+          return;
+        }
+
         const refinedData = response.results.map((item) => ({
           id: item.id,
           backdrop_path: item.backdrop_path,
@@ -236,7 +243,7 @@ export default function MediaCover() {
         <SeriesSection
           key={seriesType}
           seriesType={seriesType}
-          seriesData={seriesData[seriesType]}
+          seriesData={seriesData[seriesType] || []} // Provide an empty array if data is not fetched yet
           imgPath={imgPath}
         />
       ))}
