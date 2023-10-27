@@ -30,7 +30,14 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   const handleScrollRight = () => {
     scrollRef.current.scrollBy({ left: window.innerWidth, behavior: "smooth" });
   };
+  const handleMouseEnter = (series) => {
+    setHoveredSeriesId(series.id);
+    setShowPopup(true);
+  };
 
+  const handleMouseLeave = () => {
+    setShowPopup(false);
+  };
   function capitalizeAndRemoveUnderscores(str) {
     return str
       .split("_")
@@ -113,29 +120,19 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
           {Array.isArray(seriesData) &&
             seriesData.map((series) => (
               <Box
-                key={series.id}
+                onMouseEnter={() => handleMouseEnter(series)}
+                onMouseLeave={handleMouseLeave}
                 sx={{
+                  position: "relative",
                   display: "flex",
                   flexDirection: "row",
                   maxWidth: "400px",
                   height: "auto",
                   ml: "2px",
-                  position: "relative",
-                  overflow: "visible",
                 }}
+                key={series.id}
               >
                 <Card
-                  onMouseEnter={() => {
-                    setHoveredSeriesId(series.id);
-                    timeoutRef.current = setTimeout(() => {
-                      setShowPopup(true);
-                    }, 500);
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredSeriesId(null);
-                    setShowPopup(false);
-                    clearTimeout(timeoutRef.current);
-                  }}
                   sx={{
                     width: "250px",
                     height: "160px",
@@ -143,6 +140,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                     position: "relative",
                     transition: "all 0.3s",
                     overflow: "visible",
+                    zIndex: 1, // Ensure Card is above other page elements
                   }}
                 >
                   <CardCover
