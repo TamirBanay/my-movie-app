@@ -18,7 +18,11 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredSeriesId, setHoveredSeriesId] = useState(null);
   const scrollRef = useRef(null);
+  const hoverTimeoutRef = useRef(null);
+
   const timeoutRef = useRef(null);
+  const cardRef = useRef(null); // <-- Add this ref
+  const [popupPosition, setPopupPosition] = useState({ left: 0, top: 0 }); // <-- Add this state
 
   const handleScrollLeft = () => {
     scrollRef.current.scrollBy({
@@ -30,14 +34,37 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   const handleScrollRight = () => {
     scrollRef.current.scrollBy({ left: window.innerWidth, behavior: "smooth" });
   };
-  const handleMouseEnter = (series) => {
+  const handleMouseEnter = (event, series) => {
     setHoveredSeriesId(series.id);
-    setShowPopup(true);
+    setIsHovered(true); // Set hover state to true here
+
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+
+    hoverTimeoutRef.current = setTimeout(() => {
+      setShowPopup(true);
+
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const x = event.clientX;
+
+        setPopupPosition({
+          left: x,
+          top: rect.top + window.scrollY + rect.height / 2,
+        });
+      }
+    }, 300);
   };
 
   const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setIsHovered(false); // Set hover state to false here
     setShowPopup(false);
   };
+
   function capitalizeAndRemoveUnderscores(str) {
     return str
       .split("_")
@@ -120,7 +147,8 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
           {Array.isArray(seriesData) &&
             seriesData.map((series) => (
               <Box
-                onMouseEnter={() => handleMouseEnter(series)}
+                ref={cardRef} // <-- Ensure this is present
+                onMouseEnter={(e) => handleMouseEnter(e, series)}
                 onMouseLeave={handleMouseLeave}
                 sx={{
                   position: "relative",
@@ -133,6 +161,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                 key={series.id}
               >
                 <Card
+                  ref={cardRef} // <-- Attach the ref here
                   sx={{
                     width: "250px",
                     height: "160px",
@@ -141,6 +170,10 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                     transition: "all 0.3s",
                     overflow: "visible",
                     zIndex: 1, // Ensure Card is above other page elements
+                    transform:
+                      isHovered && hoveredSeriesId === series.id
+                        ? "scale(1.05)"
+                        : "scale(1)",
                   }}
                 >
                   <CardCover
@@ -170,7 +203,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                   {showPopup &&
                     hoveredSeriesId === series.id &&
                     createPortal(
-                      <Popup series={series} />,
+                      <Popup series={series} position={popupPosition} />, // <-- Pass the computed position
                       document.getElementById("popup-root")
                     )}
                 </>
