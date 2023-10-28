@@ -18,7 +18,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .views import AddFavoriteView,RemoveFavoriteView,FavoriteMoviesView
+from .views import AddFavoriteView,RemoveFavoriteView,FavoriteMoviesView,AddSeriesFavoriteView,getFavoriteSeriesView
 from members.views import LoginView
 from django.contrib import admin
 from django.urls import path, include
@@ -30,5 +30,8 @@ urlpatterns = [
     path('remove_favorite/<int:tmdb_movie_id>/<int:user_id>/', RemoveFavoriteView.as_view(), name='remove_favorite'),
     path('favorite_movies/<int:user_id>/', FavoriteMoviesView.as_view(), name='favorite_movies'),
     path('accounts/login/', LoginView.as_view(), name='login'),
+    path('add_favorite_series/', AddSeriesFavoriteView.as_view(), name='add_favorite_series'),
+    path('get_favorite_series/<int:user_id>/', getFavoriteSeriesView.as_view(), name='get_favorite_series'),
+
 
 ]

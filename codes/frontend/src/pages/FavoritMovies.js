@@ -20,6 +20,8 @@ import {
   _isLiked,
   _favoritMoviesDetails,
   _isDark,
+  _favoriteSeries,
+  _favoriteSeriesDetails,
 } from "../services/atom";
 import Favorite from "@mui/icons-material/Favorite";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
@@ -29,10 +31,17 @@ function FavoritMovies() {
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const navigate = useNavigate();
-
-  const [favoritMovies, setFavoritMovie] = useRecoilState(
+  const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
+  const [display, setDisplay] = useState("movies");
+  const [favoritMoviesDetails, setFavoritMovieDetails] = useRecoilState(
     _favoritMoviesDetails
   );
+  const [favoritSeriesDetails, setFavoritSeriesDetails] = useRecoilState(
+    _favoriteSeriesDetails
+  );
+  const handleDisplay = () => {
+    setDisplay(!"series");
+  };
   const theme = localStorage.getItem("theme");
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
@@ -56,14 +65,37 @@ function FavoritMovies() {
       )
     );
 
-    setFavoritMovie(moviesData);
+    setFavoritMovieDetails(moviesData);
   };
-
+  const fetchSeriesData = async () => {
+    const seriesData = await Promise.all(
+      favoriteSeries.map((series) =>
+        fetch(
+          `https://api.themoviedb.org/3/tv/${series.tmdb_series_id}?api_key=633752bf172be33a57ace2501b29092a&language=en-US`
+        ).then((response) => {
+          if (!response.ok) {
+            console.error(
+              `Failed to fetch movie id ${series.tmdb_series_id}: ${response.statusText}`
+            );
+            return null; // or some other placeholder/error value
+          }
+          return response.json();
+        })
+      )
+    );
+    setFavoritSeriesDetails(seriesData);
+  };
+  console.log(favoritSeriesDetails);
   useEffect(() => {
-    if (favoriteMovies.length > 0) {
+    if (favoriteMovies.length > 0 || favoriteSeries.length > 0) {
       fetchMovieData();
+      fetchSeriesData();
       setCurrentUserId(UserID);
       localStorage.setItem("favoriteMovies", JSON.stringify(favoriteMovies));
+      localStorage.setItem(
+        "favoriteSerie",
+        JSON.stringify(favoritSeriesDetails)
+      );
     }
   }, [favoriteMovies]);
   const initializeFavoritesFromLocalStorage = () => {
@@ -105,6 +137,7 @@ function FavoritMovies() {
         minHeight: "100vh",
       }}
     >
+      <button onClick={handleDisplay}>display {display}</button>
       <p />
       <Grid
         container
@@ -125,7 +158,7 @@ function FavoritMovies() {
             </Typography>
           </div>
         ) : (
-          favoritMovies.map((movie) => (
+          favoritMoviesDetails.map((movie) => (
             <Card
               sx={{
                 minHeight: "280px",

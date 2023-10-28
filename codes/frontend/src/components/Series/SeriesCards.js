@@ -11,18 +11,38 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Popup from "./PopupSeriesCard";
 import IconButton from "@mui/joy/IconButton";
 import { createPortal } from "react-dom";
+import { _favoriteSeries, _userIsLoggedIn } from "../../services/atom";
+import { useRecoilState } from "recoil";
 
 function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredSeriesId, setHoveredSeriesId] = useState(null);
+  const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+
   const scrollRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
-
   const timeoutRef = useRef(null);
   const cardRef = useRef(null); // <-- Add this ref
   const [popupPosition, setPopupPosition] = useState({ left: 0, top: 0 }); // <-- Add this state
+  const UserID = localStorage.getItem("userID");
+
+  const fetchFavoriteSeries = (UserID) => {
+    fetch(`http://localhost:8000/get_favorite_series/${UserID}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data.series);
+        setFavoriteSeries(data.series);
+      })
+      .catch((error) =>
+        console.error("There was a problem with the fetch:", error)
+      );
+  };
+  useEffect(() => {
+    fetchFavoriteSeries(UserID);
+  }, []);
 
   const handleScrollLeft = () => {
     scrollRef.current.scrollBy({
@@ -203,7 +223,11 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                   {showPopup &&
                     hoveredSeriesId === series.id &&
                     createPortal(
-                      <Popup series={series} position={popupPosition} />, // <-- Pass the computed position
+                      <Popup
+                        series={series}
+                        position={popupPosition}
+                        fetchFavoriteSeries={fetchFavoriteSeries(UserID)}
+                      />, // <-- Pass the computed position
                       document.getElementById("popup-root")
                     )}
                 </>
