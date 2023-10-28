@@ -7,8 +7,12 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import RecommendOutlinedIcon from "@mui/icons-material/RecommendOutlined";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import { useState, useEffect, useRef } from "react";
+import { _isDark } from "../../services/atom";
+
+import { useRecoilState } from "recoil";
 function Popup({ series, position }) {
   const [seriesDetails, setSeriesDetails] = useState([]);
+  const [isDark, setIsDark] = useRecoilState(_isDark);
 
   useEffect(() => {
     const popupRect = document
@@ -60,7 +64,7 @@ function Popup({ series, position }) {
         zIndex: 2,
         transform: "translate(-50%, -50%)", // This will adjust based on the popup's own size.
 
-        background: "#fff",
+        background: isDark == "dark" ? "#000" : "#fff",
         width: "400px",
         height: "400px",
         display: "flex",
@@ -97,22 +101,66 @@ function Popup({ series, position }) {
         <div
           style={{ display: "flex", flexDirection: "row", marginLeft: "10px" }}
         >
-          <IconButton sx={{ width: "45px", height: "45px" }}>
+          <IconButton
+            sx={{
+              width: "45px",
+              height: "45px",
+              "&:hover": {
+                "& .MuiSvgIcon-root": {
+                  bgcolor: isDark == "dark" ? "#212121" : "",
+                },
+              },
+            }}
+          >
             <AddCircleOutlineOutlinedIcon
-              sx={{ width: "45px", height: "45px" }}
+              sx={{
+                width: "45px",
+                height: "45px",
+                color: isDark == "dark" ? "#fff" : "#000",
+              }}
             />
           </IconButton>
-          <IconButton sx={{ width: "45px", height: "45px" }}>
+          <IconButton
+            sx={{
+              width: "45px",
+              height: "45px",
+              "&:hover": {
+                "& .MuiSvgIcon-root": {
+                  bgcolor: isDark == "dark" ? "#212121" : "",
+                },
+              },
+            }}
+          >
             <PlayCircleFilledOutlinedIcon
-              sx={{ width: "45px", height: "45px" }}
+              sx={{
+                width: "45px",
+                height: "45px",
+                color: isDark == "dark" ? "#fff" : "#000",
+              }}
             />
           </IconButton>
         </div>
         <div
           style={{ display: "flex", flexDirection: "row", marginRight: "10px" }}
         >
-          <IconButton sx={{ width: "45px", height: "45px" }}>
-            <ArrowDropDownCircleIcon sx={{ width: "45px", height: "45px" }} />
+          <IconButton
+            sx={{
+              width: "45px",
+              height: "45px",
+              "&:hover": {
+                "& .MuiSvgIcon-root": {
+                  bgcolor: isDark == "dark" ? "#212121" : "",
+                },
+              },
+            }}
+          >
+            <ArrowDropDownCircleIcon
+              sx={{
+                width: "45px",
+                height: "45px",
+                color: isDark == "dark" ? "#fff" : "#000",
+              }}
+            />
           </IconButton>
         </div>
       </div>
@@ -130,16 +178,24 @@ function Popup({ series, position }) {
           level="body-lg"
           fontWeight="lg"
           textColor="#212121"
-          sx={{ padding: "10px" }}
+          sx={{ padding: "10px", color: isDark === "dark" ? "white" : "" }}
         >
           {series.name}{" "}
           {series.adult ? (
-            <Typography fontSize="lg" fontWeight="sm">
+            <Typography
+              fontSize="lg"
+              fontWeight="sm"
+              sx={{ color: isDark === "dark" ? "white" : "" }}
+            >
               {" "}
               "18+"{" "}
             </Typography>
           ) : (
-            <Typography fontSize="lg" fontWeight="sm">
+            <Typography
+              fontSize="lg"
+              fontWeight="sm"
+              sx={{ color: isDark === "dark" ? "white" : "" }}
+            >
               {" "}
               +13{" "}
             </Typography>
@@ -148,7 +204,11 @@ function Popup({ series, position }) {
         <div
           style={{ marginRight: "10px", display: "flex", flexDirection: "row" }}
         >
-          <Typography level="body-lg" color="#000">
+          <Typography
+            level="body-lg"
+            color="#000"
+            sx={{ color: isDark === "dark" ? "white" : "" }}
+          >
             {series.vote_average}
           </Typography>
           <StarPurple500SharpIcon sx={{ color: "#FFB000", mr: "1%" }} />
@@ -162,7 +222,11 @@ function Popup({ series, position }) {
           alignItems: "center",
         }}
       >
-        <Typography fontSize="lg" fontWeight="sm" sx={{ marginLeft: "10px" }}>
+        <Typography
+          fontSize="lg"
+          fontWeight="sm"
+          sx={{ marginLeft: "10px", color: isDark === "dark" ? "white" : "" }}
+        >
           {seriesDetails.number_of_seasons} Seasons{"   "}
           {seriesDetails.number_of_episodes} Episodes
         </Typography>
@@ -179,7 +243,13 @@ function Popup({ series, position }) {
         {seriesDetails &&
           seriesDetails.genres &&
           seriesDetails.genres.slice(0, 3).map((genre, index, array) => (
-            <div key={genre.id} style={{ marginLeft: "10px" }}>
+            <div
+              key={genre.id}
+              style={{
+                marginLeft: "10px",
+                color: isDark === "dark" ? "white" : "",
+              }}
+            >
               <div>
                 {genre.name}
                 {index !== array.length - 1 && " |"}
