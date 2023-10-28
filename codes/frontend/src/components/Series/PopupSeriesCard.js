@@ -7,8 +7,14 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import RecommendOutlinedIcon from "@mui/icons-material/RecommendOutlined";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import { useState, useEffect, useRef } from "react";
-const Popup = ({ series }) => {
+function Popup({ series, position }) {
   const [seriesDetails, setSeriesDetails] = useState([]);
+
+  useEffect(() => {
+    const popupRect = document
+      .getElementById("popup-root")
+      .getBoundingClientRect();
+  }, []);
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
 
@@ -49,17 +55,22 @@ const Popup = ({ series }) => {
     <div
       style={{
         position: "absolute",
-        top: 0,
-        left: 0,
-        background: "#fff",
+        top: `${position.top}px`,
+        left: `${position.left}px`,
         zIndex: 2,
-        width: "100%",
-        height: "100%",
+        transform: "translate(-50%, -50%)", // This will adjust based on the popup's own size.
+
+        background: "#fff",
+        width: "400px",
+        height: "400px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
         overflow: "auto",
+        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+
+        borderRadius: "2px",
       }}
       key={series.id}
     >
@@ -178,5 +189,5 @@ const Popup = ({ series }) => {
       </div>
     </div>
   );
-};
+}
 export default Popup;
