@@ -62,7 +62,6 @@ export default function GradientCover(props) {
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
     height: "20px",
-    // marginLeft: "10%",
     padding: "10px",
     border: "2px solid #4a90e2",
     outline: "none",
