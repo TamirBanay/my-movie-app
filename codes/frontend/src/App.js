@@ -21,6 +21,7 @@ import {
   _user,
   _isDark,
   _selectType,
+  _favoriteSeries,
 } from "./services/atom";
 import Navbar from "./components/Navbar";
 import Movie from "./pages/Movie";
@@ -44,7 +45,7 @@ function App(props) {
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [selectType, setSelectType] = useRecoilState(_selectType);
   const UserID = localStorage.getItem("userID");
-
+  const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
   const fetchUserData = () => {
     if (currentUserId) {
       fetch(`http://localhost:8000/api/user_detail/${userId}/`)

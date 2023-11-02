@@ -7,12 +7,14 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import RecommendOutlinedIcon from "@mui/icons-material/RecommendOutlined";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import { useState, useEffect, useRef } from "react";
-import { _isDark } from "../../services/atom";
-
+import { _isDark, _favoriteSeries } from "../../services/atom";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useRecoilState } from "recoil";
 function Popup({ series, position }) {
   const [seriesDetails, setSeriesDetails] = useState([]);
   const [isDark, setIsDark] = useRecoilState(_isDark);
+  const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
+  const favoriteSeriesStorage = localStorage.getItem("favoriteSeries");
 
   useEffect(() => {
     const popupRect = document
@@ -55,6 +57,48 @@ function Popup({ series, position }) {
   useEffect(() => {
     fetchSeriesDetails();
   }, [series.id]);
+
+  const addSeriesToFavorite = async (tmdbSeriesId) => {
+    const UserId = localStorage.getItem("userID");
+    const apiUrl = "http://localhost:8000/add_favorite_series/";
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tmdb_series_id: tmdbSeriesId,
+          user: UserId,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Series added successfully:", data);
+
+        // Update favoriteSeries state
+        setFavoriteSeries((prevState) => {
+          const updatedSeries = [
+            ...prevState,
+            { tmdb_series_id: tmdbSeriesId },
+          ];
+
+          // Update favoriteSeries in localStorage
+          localStorage.setItem("favoriteSeries", JSON.stringify(updatedSeries));
+
+          return updatedSeries;
+        });
+      } else {
+        const errorData = await response.json();
+        console.error("Error adding series:", errorData);
+      }
+    } catch (error) {
+      console.error("Error while making the request:", error);
+    }
+  };
+
   return (
     <div
       style={{
@@ -102,6 +146,7 @@ function Popup({ series, position }) {
           style={{ display: "flex", flexDirection: "row", marginLeft: "10px" }}
         >
           <IconButton
+            onClick={() => addSeriesToFavorite(series.id)}
             sx={{
               width: "45px",
               height: "45px",

@@ -29,6 +29,7 @@ import {
   _isDark,
   _favoritMovies,
   _user,
+  _favoriteSeries,
 } from "../services/atom";
 import { googleLogout } from "@react-oauth/google";
 
@@ -48,6 +49,10 @@ function ResponsiveAppBar() {
   const toggleIsDark = () => {
     setIsDark((curr) => (curr === "light" ? "dark" : "light"));
   };
+  const favoriteSeriesStorage = JSON.parse(
+    localStorage.getItem("favoriteSeries") || "[]"
+  );
+
   const [favoriteMovies, setFavoriteMovies] = useRecoilState(_favoritMovies);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -158,19 +163,37 @@ function ResponsiveAppBar() {
               }}
             >
               {userIsLoggedIn ? (
-                <MenuItem onClick={handleCloseNavMenu} sx={{ width: "130px" }}>
-                  <Link
-                    to={`/${currentUserId}/favorits`}
-                    style={{ color: "#000", textDecoration: "none" }}
+                <div>
+                  <MenuItem
+                    onClick={handleCloseNavMenu}
+                    sx={{ width: "140px" }}
                   >
-                    <StyledBadge
-                      badgeContent={favoriteMovies.length}
-                      color="primary"
+                    <Link
+                      to={`/${currentUserId}/series`}
+                      style={{ color: "#000", textDecoration: "none" }}
                     >
-                      Favorites
-                    </StyledBadge>
-                  </Link>
-                </MenuItem>
+                      SERIES
+                    </Link>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleCloseNavMenu}
+                    sx={{ width: "130px" }}
+                  >
+                    <Link
+                      to={`/${currentUserId}/favorits`}
+                      style={{ color: "#000", textDecoration: "none" }}
+                    >
+                      <StyledBadge
+                        badgeContent={
+                          favoriteMovies.length + favoriteSeriesStorage.length
+                        }
+                        color="primary"
+                      >
+                        FAVORITE
+                      </StyledBadge>
+                    </Link>
+                  </MenuItem>
+                </div>
               ) : (
                 ""
               )}
@@ -228,7 +251,9 @@ function ResponsiveAppBar() {
                       vertical: "top",
                       horizontal: "left",
                     }}
-                    badgeContent={favoriteMovies.length}
+                    badgeContent={
+                      favoriteMovies.length + favoriteSeriesStorage.length
+                    }
                     color="secondary"
                   >
                     MY Favorites

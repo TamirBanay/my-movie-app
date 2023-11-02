@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Favorite  # Change MovieILike to Favorite
+from .models import Favorite ,Favorite_series # Change MovieILike to Favorite
 
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,4 +11,8 @@ class FavoriteSerializer(serializers.ModelSerializer):
 class FavoriteMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
+        fields = '__all__'
+class FavoriteSeriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite_series
         fields = '__all__'

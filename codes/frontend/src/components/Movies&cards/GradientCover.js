@@ -50,7 +50,7 @@ export default function GradientCover(props) {
   const [filterLetter, setFilterLetter] = useState("");
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const navigate = useNavigate();
-  const [favorites, setFavorites] = useState([]);
+  const [favoritesMovie, setFavoritesMovie] = useState([]);
   const [animatedMovieId, setAnimatedMovieId] = useState(null);
 
   const [showAlertSuccessAddMovie, setShowAlertSuccessAddMovie] =
@@ -72,8 +72,8 @@ export default function GradientCover(props) {
     width: "100%",
   });
 
-  const addToFavorites = (movie) => {
-    setFavorites([...favorites, movie]);
+  const addToFavoritesMovie = (movie) => {
+    setFavoritesMovie([...favoritesMovie, movie]);
   };
 
   const normalStyle = {
@@ -87,7 +87,7 @@ export default function GradientCover(props) {
   };
   const handleAddToFavorites = (movie) => {
     setAnimatedMovieId(movie.id); // Trigger the animation
-    addToFavorites(movie);
+    addToFavoritesMovie(movie);
 
     // Reset after the duration of your animation:
     setTimeout(() => {

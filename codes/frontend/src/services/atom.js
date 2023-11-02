@@ -97,3 +97,11 @@ export const _topRate = atom({
   key: "_topRate",
   default: [],
 });
+export const _favoriteSeries = atom({
+  key: "_favoriteSeries",
+  default: [],
+});
+export const _favoriteSeriesDetails = atom({
+  key: "_favoriteSeriesDetails",
+  default: [],
+});
