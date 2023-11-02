@@ -11,7 +11,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Popup from "./PopupSeriesCard";
 import IconButton from "@mui/joy/IconButton";
 import { createPortal } from "react-dom";
-import { _favoriteSeries, _userIsLoggedIn } from "../../services/atom";
+import { _favoriteSeries, _userIsLoggedIn, _isDark } from "../../services/atom";
 import { useRecoilState } from "recoil";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 function SeriesSection({ seriesType, seriesData, imgPath }) {
@@ -21,6 +21,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [hoveredSeriesId, setHoveredSeriesId] = useState(null);
   const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+  const [isDark, setIsDark] = useRecoilState(_isDark);
 
   const scrollRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
@@ -98,7 +99,12 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
 
   return (
     <div key={seriesType}>
-      <Typography level="body-lg" fontWeight="lg" textColor="#000">
+      <p />
+      <Typography
+        level="body-lg"
+        fontWeight="lg"
+        textColor={isDark == "dark" ? "#fff" : "#000"}
+      >
         {capitalizeAndRemoveUnderscores(seriesType)}
       </Typography>
       <p />

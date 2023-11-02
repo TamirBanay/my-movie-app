@@ -28,7 +28,7 @@ import {
   _showAlertSuccessAddMovie,
 } from "../../services/atom";
 import { useRecoilState } from "recoil";
-import AddToFavoritList from "../Trailers/AddToFavoritList";
+import AddToFavoritList from "./AddToFavoritList";
 
 import Grid from "@mui/joy/Grid";
 import DotsMobileStepper from "../DotsMobileStepper";
