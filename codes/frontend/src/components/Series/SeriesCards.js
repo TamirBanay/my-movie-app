@@ -11,9 +11,9 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Popup from "./PopupSeriesCard";
 import IconButton from "@mui/joy/IconButton";
 import { createPortal } from "react-dom";
-import { _favoriteSeries, _userIsLoggedIn } from "../../services/atom";
+import { _favoriteSeries, _userIsLoggedIn, _isDark } from "../../services/atom";
 import { useRecoilState } from "recoil";
-
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedSeries, setSelectedSeries] = useState(null);
@@ -21,28 +21,14 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [hoveredSeriesId, setHoveredSeriesId] = useState(null);
   const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
   const [userIsLoggedIn, setUserIsLoggedIn] = useRecoilState(_userIsLoggedIn);
+  const [isDark, setIsDark] = useRecoilState(_isDark);
 
   const scrollRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
   const timeoutRef = useRef(null);
-  const cardRef = useRef(null); // <-- Add this ref
-  const [popupPosition, setPopupPosition] = useState({ left: 0, top: 0 }); // <-- Add this state
+  const cardRef = useRef(null); //
+  const [popupPosition, setPopupPosition] = useState({ left: 0, top: 0 });
   const UserID = localStorage.getItem("userID");
-
-  // const fetchFavoriteSeries = (UserID) => {
-  //   fetch(`http://localhost:8000/get_favorite_series/${UserID}/`)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       // console.log(data.series);
-  //       setFavoriteSeries(data.series);
-  //     })
-  //     .catch((error) =>
-  //       console.error("There was a problem with the fetch:", error)
-  //     );
-  // };
-  // useEffect(() => {
-  //   fetchFavoriteSeries(UserID);
-  // }, []);
 
   const fetchFavoriteMovies = (UserID) => {
     fetch(`http://localhost:8000/get_favorite_series/${UserID}/`)
@@ -69,7 +55,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   };
   const handleMouseEnter = (event, series) => {
     setHoveredSeriesId(series.id);
-    setIsHovered(true); // Set hover state to true here
+    setIsHovered(true);
 
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
@@ -94,7 +80,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
-    setIsHovered(false); // Set hover state to false here
+    setIsHovered(false);
     setShowPopup(false);
   };
 
@@ -113,13 +99,18 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
 
   return (
     <div key={seriesType}>
-      <Typography level="body-lg" fontWeight="lg" textColor="#000">
+      <p />
+      <Typography
+        level="body-lg"
+        fontWeight="lg"
+        textColor={isDark == "dark" ? "#fff" : "#000"}
+      >
         {capitalizeAndRemoveUnderscores(seriesType)}
       </Typography>
       <p />
       <Box
         sx={{
-          position: "relative", // Added this line for the wrapper
+          position: "relative",
         }}
       >
         <IconButton
@@ -180,7 +171,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
           {Array.isArray(seriesData) &&
             seriesData.map((series) => (
               <Box
-                ref={cardRef} // <-- Ensure this is present
+                ref={cardRef}
                 onMouseEnter={(e) => handleMouseEnter(e, series)}
                 onMouseLeave={handleMouseLeave}
                 sx={{
@@ -202,7 +193,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                     position: "relative",
                     transition: "all 0.3s",
                     overflow: "visible",
-                    zIndex: 1, // Ensure Card is above other page elements
+                    zIndex: 1,
                     transform:
                       isHovered && hoveredSeriesId === series.id
                         ? "scale(1.05)"
@@ -236,11 +227,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                   {showPopup &&
                     hoveredSeriesId === series.id &&
                     createPortal(
-                      <Popup
-                        series={series}
-                        position={popupPosition}
-                        // fetchFavoriteSeries={fetchFavoriteSeries(UserID)}
-                      />, // <-- Pass the computed position
+                      <Popup series={series} position={popupPosition} />,
                       document.getElementById("popup-root")
                     )}
                 </>
@@ -263,7 +250,6 @@ export default function MediaCover() {
   const imgPath = "https://image.tmdb.org/t/p/original/";
   const [seriesData, setSeriesData] = useState({});
 
-  // Important: Remember to replace 'YOUR_API_KEY_HERE' with your actual API key
   const API_KEY = "633752bf172be33a57ace2501b29092a";
   const arrOfSeries = ["airing_today", "top_rated", "on_the_air", "popular"];
 
@@ -311,7 +297,7 @@ export default function MediaCover() {
         <SeriesSection
           key={seriesType}
           seriesType={seriesType}
-          seriesData={seriesData[seriesType] || []} // Provide an empty array if data is not fetched yet
+          seriesData={seriesData[seriesType] || []}
           imgPath={imgPath}
         />
       ))}

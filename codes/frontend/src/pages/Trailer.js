@@ -29,7 +29,7 @@ import FilterIcon from "@mui/icons-material/Filter";
 import { IconButton } from "@mui/material";
 import MovieReviews from "../components/Trailers/MovieReviews";
 import ReviewsIcon from "@mui/icons-material/Reviews";
-import AddToFavoritList from "../components/Trailers/AddToFavoritList";
+import AddToFavoritList from "../components/Movies&cards/AddToFavoritList";
 function Trailer(props) {
   const [videoKey, setVideoKey] = useState(null);
   const { movieId } = useParams();

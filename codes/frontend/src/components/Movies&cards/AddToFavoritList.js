@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import GradientCover from "../Movies&cards/GradientCover";
+import GradientCover from "./GradientCover";
 import SkeletonMovies from "../Skeletons/SkeletonMovies";
-import AlertNotifications from "../Movies&cards/AlertNotifications";
+import AlertNotifications from "./AlertNotifications";
 import {
   _moviesList,
   _currentPage,

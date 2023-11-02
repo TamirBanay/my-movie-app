@@ -15,6 +15,12 @@ function Popup({ series, position }) {
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
   const favoriteSeriesStorage = localStorage.getItem("favoriteSeries");
+  const favoriteSeriesInStorage = JSON.parse(favoriteSeriesStorage || "[]");
+  const isSeriesFavorite = favoriteSeriesInStorage.some(
+    (seriesItem) => seriesItem.tmdb_series_id === series.id
+  );
+  const UserID = localStorage.getItem("userID");
+  const csrfToken = localStorage.getItem("token");
 
   useEffect(() => {
     const popupRect = document
@@ -23,6 +29,41 @@ function Popup({ series, position }) {
   }, []);
 
   const imgPath = "https://image.tmdb.org/t/p/original/";
+
+  const removeFromSeriesFavorit = (seriesId) => {
+    const url = `http://localhost:8000/remove_favoriteSeries/${seriesId}/${UserID}/`;
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Update the state
+          setFavoriteSeries((prevState) =>
+            prevState.filter((series) => series.tmdb_series_id !== seriesId)
+          );
+
+          // Update localStorage
+          const currentFavoriteSeries = JSON.parse(
+            localStorage.getItem("favoriteSeries") || "[]"
+          );
+          const updatedFavoriteSeries = currentFavoriteSeries.filter(
+            (series) => series.tmdb_series_id !== seriesId
+          );
+          localStorage.setItem(
+            "favoriteSeries",
+            JSON.stringify(updatedFavoriteSeries)
+          );
+        } else {
+          console.error("Failed to remove movie");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const fetchSeriesDetails = () => {
     const options = {
@@ -146,7 +187,6 @@ function Popup({ series, position }) {
           style={{ display: "flex", flexDirection: "row", marginLeft: "10px" }}
         >
           <IconButton
-            onClick={() => addSeriesToFavorite(series.id)}
             sx={{
               width: "45px",
               height: "45px",
@@ -157,13 +197,25 @@ function Popup({ series, position }) {
               },
             }}
           >
-            <AddCircleOutlineOutlinedIcon
-              sx={{
-                width: "45px",
-                height: "45px",
-                color: isDark == "dark" ? "#fff" : "#000",
-              }}
-            />
+            {isSeriesFavorite ? (
+              <HighlightOffIcon
+                sx={{
+                  width: "45px",
+                  height: "45px",
+                  color: isDark == "dark" ? "#fff" : "#000",
+                }}
+                onClick={() => removeFromSeriesFavorit(series.id)}
+              />
+            ) : (
+              <AddCircleOutlineOutlinedIcon
+                sx={{
+                  width: "45px",
+                  height: "45px",
+                  color: isDark == "dark" ? "#fff" : "#000",
+                }}
+                onClick={() => addSeriesToFavorite(series.id)}
+              />
+            )}
           </IconButton>
           <IconButton
             sx={{

@@ -28,7 +28,7 @@ import {
   _showAlertSuccessAddMovie,
 } from "../../services/atom";
 import { useRecoilState } from "recoil";
-import AddToFavoritList from "../Trailers/AddToFavoritList";
+import AddToFavoritList from "./AddToFavoritList";
 
 import Grid from "@mui/joy/Grid";
 import DotsMobileStepper from "../DotsMobileStepper";
@@ -62,7 +62,6 @@ export default function GradientCover(props) {
   const [inputStyle, setInputStyle] = useState({
     borderRadius: "15px",
     height: "20px",
-    // marginLeft: "10%",
     padding: "10px",
     border: "2px solid #4a90e2",
     outline: "none",
