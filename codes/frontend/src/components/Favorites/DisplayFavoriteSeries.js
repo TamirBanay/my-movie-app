@@ -34,34 +34,57 @@ function DisplayFavoriteSeries() {
   const UserID = localStorage.getItem("userID");
   const csrfToken = localStorage.getItem("token");
 
-  const favoriteSeries = JSON.parse(
+  const favoriteSeriesStorage = JSON.parse(
     localStorage.getItem("favoriteSeries") || "[]"
   );
 
-  //   const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
+  const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
   const [favoritSeriesDetails, setFavoritSeriesDetails] = useRecoilState(
     _favoriteSeriesDetails
   );
 
-  //   const fetchFavoriteSeries = (UserID) => {
-  //     fetch(`http://localhost:8000/get_favorite_series/${UserID}/`)
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         // console.log(data.series);
-  //         setFavoriteSeries(data.series);
-  //       })
-  //       .catch((error) =>
-  //         console.error("There was a problem with the fetch:", error)
-  //       );
-  //   };
+  const removeFromSeriesFavorit = (seriesId) => {
+    const url = `http://localhost:8000/remove_favoriteSeries/${seriesId}/${UserID}/`;
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Update the state
+          setFavoriteSeries((prevState) =>
+            prevState.filter((series) => series.tmdb_series_id !== seriesId)
+          );
+
+          // Update localStorage
+          const currentFavoriteSeries = JSON.parse(
+            localStorage.getItem("favoriteSeries") || "[]"
+          );
+          const updatedFavoriteSeries = currentFavoriteSeries.filter(
+            (series) => series.tmdb_series_id !== seriesId
+          );
+          localStorage.setItem(
+            "favoriteSeries",
+            JSON.stringify(updatedFavoriteSeries)
+          );
+        } else {
+          console.error("Failed to remove movie");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const fetchMovieData = async () => {
-    if (!Array.isArray(favoriteSeries)) {
-      console.error("favoriteSeries is not an array:", favoriteSeries);
+    if (!Array.isArray(favoriteSeriesStorage)) {
+      console.error("favoriteSeries is not an array:", favoriteSeriesStorage);
       return;
     }
     const seriesData = await Promise.all(
-      favoriteSeries.map((series) =>
+      favoriteSeriesStorage.map((series) =>
         fetch(
           `https://api.themoviedb.org/3/tv/${series.tmdb_series_id}?api_key=633752bf172be33a57ace2501b29092a&language=en-US`
         ).then((response) => {
@@ -78,14 +101,16 @@ function DisplayFavoriteSeries() {
 
     setFavoritSeriesDetails(seriesData);
   };
-  console.log(favoritSeriesDetails);
   useEffect(() => {
-    if (favoriteSeries.length > 0) {
+    if (favoriteSeriesStorage.length > 0) {
       fetchMovieData();
       setCurrentUserId(UserID);
-      localStorage.setItem("favoriteSeries", JSON.stringify(favoriteSeries));
+      localStorage.setItem(
+        "favoriteSeries",
+        JSON.stringify(favoriteSeriesStorage)
+      );
     }
-  }, []);
+  }, [favoriteSeriesStorage]);
 
   return (
     <Grid
@@ -96,7 +121,7 @@ function DisplayFavoriteSeries() {
         justifyContent: "center",
       }}
     >
-      {favoriteSeries.length == 0 ? (
+      {favoriteSeriesStorage.length == 0 ? (
         <div>
           <p />
           <Typography
@@ -138,7 +163,7 @@ function DisplayFavoriteSeries() {
               <Typography
                 startDecorator={
                   <Favorite
-                    // onClick={() => removeFromFavorit(movie.id)}
+                    onClick={() => removeFromSeriesFavorit(series.id)}
                     color="warning"
                   />
                 }

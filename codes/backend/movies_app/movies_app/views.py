@@ -84,3 +84,17 @@ class getFavoriteSeriesView(APIView):
         series = Favorite_series.objects.filter(user_id=user_id)
         serializer = FavoriteSeriesSerializer(series, many=True)
         return Response({'series': serializer.data}, status=status.HTTP_200_OK)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RemoveFavoriteSeriesView(View):
+    def delete(self, request, tmdb_series_id, user_id):
+        try:
+            # Fetch the Favorite object by tmdb_series_id and user_id
+            favorite_series = get_object_or_404(Favorite_series, tmdb_series_id=tmdb_series_id, user_id=user_id)
+            
+            # Delete the favorite
+            favorite_series.delete()
+            
+            return JsonResponse({'success': True, 'message': 'Series removed from favorites successfully.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
