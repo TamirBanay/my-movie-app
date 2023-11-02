@@ -14,6 +14,7 @@ function Popup({ series, position }) {
   const [seriesDetails, setSeriesDetails] = useState([]);
   const [isDark, setIsDark] = useRecoilState(_isDark);
   const [favoriteSeries, setFavoriteSeries] = useRecoilState(_favoriteSeries);
+  const favoriteSeriesStorage = localStorage.getItem("favoriteSeries");
 
   useEffect(() => {
     const popupRect = document
@@ -69,17 +70,26 @@ function Popup({ series, position }) {
         },
         body: JSON.stringify({
           tmdb_series_id: tmdbSeriesId,
-          user: UserId, // Assuming you pass the user's ID as a parameter to this function
+          user: UserId,
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log("Series added successfully:", data);
-        setFavoriteSeries((prevState) => [
-          ...prevState,
-          { tmdb_series_id: tmdbSeriesId }, // Assuming the data structure is like this
-        ]);
+
+        // Update favoriteSeries state
+        setFavoriteSeries((prevState) => {
+          const updatedSeries = [
+            ...prevState,
+            { tmdb_series_id: tmdbSeriesId },
+          ];
+
+          // Update favoriteSeries in localStorage
+          localStorage.setItem("favoriteSeries", JSON.stringify(updatedSeries));
+
+          return updatedSeries;
+        });
       } else {
         const errorData = await response.json();
         console.error("Error adding series:", errorData);

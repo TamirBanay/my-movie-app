@@ -29,11 +29,25 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
   const [popupPosition, setPopupPosition] = useState({ left: 0, top: 0 }); // <-- Add this state
   const UserID = localStorage.getItem("userID");
 
-  const fetchFavoriteSeries = (UserID) => {
+  // const fetchFavoriteSeries = (UserID) => {
+  //   fetch(`http://localhost:8000/get_favorite_series/${UserID}/`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // console.log(data.series);
+  //       setFavoriteSeries(data.series);
+  //     })
+  //     .catch((error) =>
+  //       console.error("There was a problem with the fetch:", error)
+  //     );
+  // };
+  // useEffect(() => {
+  //   fetchFavoriteSeries(UserID);
+  // }, []);
+
+  const fetchFavoriteMovies = (UserID) => {
     fetch(`http://localhost:8000/get_favorite_series/${UserID}/`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data.series);
         setFavoriteSeries(data.series);
       })
       .catch((error) =>
@@ -41,9 +55,8 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
       );
   };
   useEffect(() => {
-    fetchFavoriteSeries(UserID);
+    fetchFavoriteMovies(UserID);
   }, []);
-
   const handleScrollLeft = () => {
     scrollRef.current.scrollBy({
       left: -window.innerWidth,
@@ -226,7 +239,7 @@ function SeriesSection({ seriesType, seriesData, imgPath }) {
                       <Popup
                         series={series}
                         position={popupPosition}
-                        fetchFavoriteSeries={fetchFavoriteSeries(UserID)}
+                        // fetchFavoriteSeries={fetchFavoriteSeries(UserID)}
                       />, // <-- Pass the computed position
                       document.getElementById("popup-root")
                     )}
