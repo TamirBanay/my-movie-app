@@ -37,8 +37,8 @@ My Movie Explorer App is a small React project integrated with a Django backend 
 
 #### Frontend Setup:
 
-1. Clone the repository: `git clone https://gitlab.com/banay9329/my-movie-app.git`
-2. Change to the frontend project directory: `cd my-movie-app/frontend`
+1. Clone the repository: `git clone https://github.com/TamirBanay/My-Movie-App.git`
+2. Change to the frontend project directory: `cd my-movie-app/codes/frontend`
 3. Install dependencies: `npm install`
 4. Start the application: `npm start`
 
